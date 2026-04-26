@@ -476,8 +476,10 @@ hr.divr{border:none;border-top:2px solid var(--bg3);margin:3px 0;}
   </div>
   <div class="content">
 
-    <form action="https://formspree.io/f/mrerybzq" method="POST" id="quote-form" onsubmit="handleSubmit(event)">
-      <input type="hidden" name="_subject" value="New Quote — Bobby (Sparks Heating &amp; Air)">
+    <form action="https://api.web3forms.com/submit" method="POST" id="quote-form" onsubmit="handleSubmit(event)">
+      <input type="hidden" name="access_key" value="ad263e76-0cc9-4e22-8770-5aa78da0dc5e">
+      <input type="hidden" name="subject" value="New Quote from Bobby - Sparks Heating and Air">
+      <input type="hidden" name="from_name" value="Sparks Sales Tool - Bobby">
       <input type="hidden" name="rep_name" value="Bobby">
       <input type="hidden" id="h-category" name="category" value="Heat Pump">
       <input type="hidden" id="h-system_type" name="system_type" value="">
@@ -1158,33 +1160,104 @@ function updPreviews(){
 // ── FORM SUBMIT ───────────────────────────────────────────────────────────────
 function handleSubmit(e){
   e.preventDefault();
-  const btn=document.getElementById('submit-btn');
-  btn.disabled=true;
-  btn.innerHTML='Submitting...';
-  const form=document.getElementById('quote-form');
-  const data=new FormData(form);
-  fetch(form.action,{
-    method:'POST',
-    body:data,
-    headers:{Accept:'application/json'}
-  }).then(r=>{
-    if(r.ok){
-      const first=document.getElementById('f-first').value||'Client';
-      const last=document.getElementById('f-last').value||'';
-      document.getElementById('success-client').textContent=(first+' '+last).trim();
+
+  // Populate the notes field with full quote details
+  const noteEl = document.getElementById('f-notes');
+  const existing = noteEl.value;
+  const quoteInfo = buildQuoteInfo();
+  noteEl.value = quoteInfo + (existing ? '\n\nADDITIONAL NOTES:\n' + existing : '');
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = 'Submitting...';
+
+  const form = document.getElementById('quote-form');
+  const data = new FormData(form);
+
+  fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    body: data
+  }).then(r => r.json()).then(d => {
+    if(d.success){
+      const first = document.getElementById('f-first').value || 'Client';
+      const last  = document.getElementById('f-last').value  || '';
+      document.getElementById('success-client').textContent = (first+' '+last).trim();
       document.getElementById('success-screen').classList.add('show');
+      // Restore notes field
+      noteEl.value = existing;
     } else {
-      r.json().then(d=>{
-        alert('Submission error: '+(d.error||'Please try again.'));
-        btn.disabled=false;
-        btn.innerHTML='&#9658; Submit Quote to Sparks';
-      });
+      alert('Submission error: ' + (d.message || 'Please try again.'));
+      noteEl.value = existing;
+      btn.disabled = false;
+      btn.innerHTML = 'Submit Quote to Sparks';
     }
-  }).catch(()=>{
-    alert('Network error — please check your connection and try again.');
-    btn.disabled=false;
-    btn.innerHTML='&#9658; Submit Quote to Sparks';
+  }).catch(() => {
+    alert('Network error — check your connection and try again.');
+    noteEl.value = existing;
+    btn.disabled = false;
+    btn.innerHTML = 'Submit Quote to Sparks';
   });
+}
+
+function buildQuoteInfo(){
+  const lines = [];
+  lines.push('=== SPARKS QUOTE — Rep: Bobby ===');
+  lines.push('Client: ' + (document.getElementById('f-first').value||'') + ' ' + (document.getElementById('f-last').value||''));
+  lines.push('Email:  ' + (document.getElementById('f-email').value||''));
+  lines.push('Phone:  ' + (document.getElementById('f-phone').value||''));
+  lines.push('Address: ' + (document.getElementById('f-addr').value||''));
+  const unit = document.getElementById('f-unit').value;
+  if(unit) lines.push('Unit: ' + unit);
+  lines.push('Time: ' + (document.getElementById('f-time').value||''));
+  lines.push('Type: ' + (document.getElementById('f-proptype').value||''));
+  lines.push('');
+  lines.push('--- SYSTEM ---');
+  lines.push('Category: ' + qCat.toUpperCase());
+  try{
+    if(qCat==='hp'){
+      const hpType = document.getElementById('hp-type').value;
+      const hpSz   = document.getElementById('hp-size').value;
+      const hpCoil = document.getElementById('hp-coil').value;
+      const d = (hpType==='keep'?HP_KEEP:HP_DUAL)[hpSz];
+      const coil = hpCoil==='A'?d.coilA:(d.coilB||d.coilA);
+      const fed = Math.min(2000,Math.round(d.price*0.30));
+      const net = Math.max(0,d.price-d.xcelRebate-fed);
+      lines.push('System: ' + (hpType==='keep'?'Keep Existing Furnace':'Dual Fuel - New Payne Furnace') + ' — ' + d.tons);
+      lines.push('HP Model: ' + d.model);
+      lines.push('Coil: ' + coil.model + ' (' + coil.size + ')');
+      lines.push('Price: ' + fmt(d.price));
+      lines.push('Xcel Rebate: -' + fmt(d.xcelRebate));
+      lines.push('IRA Credit: -' + fmt(fed));
+      lines.push('Est Net Cost: ' + fmt(net));
+    } else if(qCat==='ac'){
+      const sz   = document.getElementById('ac-size').value;
+      const tier = document.getElementById('ac-tier').value;
+      const d = AC[tier][sz];
+      lines.push('AC Model: ' + d.model + ' (' + d.tons + ')');
+      lines.push('Tier: ' + tier);
+      lines.push('Total: ' + fmt(d.price + MAT));
+    } else if(qCat==='full'){
+      const sz    = document.getElementById('fs-size').value;
+      const tier  = document.getElementById('fs-tier').value;
+      const afue  = document.getElementById('fs-afue').value;
+      const ftier = document.getElementById('fs-ftier').value;
+      const ac = AC[tier][sz];
+      const fn = getFurnEntry(ftier,afue,sz);
+      lines.push('AC Model: ' + ac.model + ' (' + ac.tons + ')');
+      lines.push('Furnace: ' + fn.model + ' ' + fn.btu + ' ' + fn.afue);
+      lines.push('Total: ' + fmt(ac.price + fn.price + MAT));
+    } else if(qCat==='furnace'){
+      const sz   = document.getElementById('fn-size').value;
+      const afue = document.getElementById('fn-afue').value;
+      const tier = document.getElementById('fn-tier').value;
+      const fn = getFurnEntry(tier,afue,sz);
+      lines.push('Furnace: ' + fn.model + ' ' + fn.btu + ' ' + fn.afue + (fn.stage?' - '+fn.stage:''));
+      lines.push('Total: ' + fmt(fn.price + MAT));
+    }
+  }catch(err){lines.push('(system details not available)');}
+  const photos = document.getElementById('f-photo-count');
+  if(photos) lines.push('\nPhotos: ' + photos.value);
+  return lines.join('\n');
 }
 
 function resetForm(){
