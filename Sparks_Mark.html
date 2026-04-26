@@ -288,7 +288,7 @@ hr.divr{border:none;border-top:2px solid var(--bg3);margin:3px 0;}
   .flyer{width:100%;}
 }
 @media print{
-  .topbar,.pbar,#calc-panel,#client-panel,#pitch-panel,#playbook-panel{display:none!important;}
+  .topbar,.pbar,#calc-panel,#client-panel,#pitch-panel{display:none!important;}
   #flyer-panel{display:block!important;}
   .fly-wrap{background:white;padding:0;}
   body{background:white;}
@@ -398,7 +398,6 @@ hr.divr{border:none;border-top:2px solid var(--bg3);margin:3px 0;}
       <button class="nav-tab active" onclick="showP('calc')">Calc</button>
       <button class="nav-tab" onclick="showP('client')">Quote</button>
       <button class="nav-tab" onclick="showP('pitch')">Pitch</button>
-      <button class="nav-tab" onclick="showP('playbook')">Playbook</button>
       <button class="nav-tab" onclick="showP('flyer')">Flyer</button>
     </div>
     <button class="admin-btn" onclick="admOpen()">⚙ ADMIN</button>
@@ -480,36 +479,21 @@ hr.divr{border:none;border-top:2px solid var(--bg3);margin:3px 0;}
       <input type="hidden" name="access_key" value="ad263e76-0cc9-4e22-8770-5aa78da0dc5e">
       <input type="hidden" name="subject" value="New Quote from Mark - Sparks Heating and Air">
       <input type="hidden" name="from_name" value="Sparks Sales Tool - Mark">
-      <input type="hidden" name="rep_name" value="Mark">
-      <input type="hidden" id="h-category" name="category" value="Heat Pump">
-      <input type="hidden" id="h-system_type" name="system_type" value="">
-      <input type="hidden" id="h-home_size" name="home_size" value="">
-      <input type="hidden" id="h-ac_tier" name="ac_tier" value="">
-      <input type="hidden" id="h-ac_model" name="ac_model" value="">
-      <input type="hidden" id="h-furnace_tier" name="furnace_tier" value="">
-      <input type="hidden" id="h-furnace_afue" name="furnace_afue" value="">
-      <input type="hidden" id="h-furnace_model" name="furnace_model" value="">
-      <input type="hidden" id="h-coil_model" name="coil_model" value="">
-      <input type="hidden" id="h-system_price" name="system_price" value="">
-      <input type="hidden" id="h-xcel_rebate" name="xcel_rebate" value="">
-      <input type="hidden" id="h-ira_credit" name="ira_credit" value="">
-      <input type="hidden" id="h-net_cost" name="net_cost" value="">
-      <input type="hidden" id="h-total_price" name="total_price" value="">
 
       <p class="sec-head">Client information</p>
       <div class="cform">
         <div class="fhdr">Customer Details</div>
         <div class="fbody">
           <div class="fgrid">
-            <div class="fg"><label>First Name *</label><input type="text" name="client_first" id="f-first" placeholder="Jane" required oninput="updQS()"></div>
-            <div class="fg"><label>Last Name *</label><input type="text" name="client_last" id="f-last" placeholder="Smith" required oninput="updQS()"></div>
-            <div class="fg"><label>Email *</label><input type="email" name="client_email" id="f-email" placeholder="jane@email.com" required></div>
-            <div class="fg"><label>Phone *</label><input type="tel" name="client_phone" id="f-phone" placeholder="(720) 555-0100" required></div>
-            <div class="fg full"><label>Property Address *</label><input type="text" name="client_address" id="f-addr" placeholder="1234 Main St, Denver CO 80202" required oninput="updQS()"></div>
-            <div class="fg"><label>Unit / HOA</label><input type="text" name="client_unit" id="f-unit" placeholder="Unit 4B"></div>
-            <div class="fg"><label>Best Time to Call</label><input type="text" name="client_time" id="f-time" placeholder="Weekdays after 4pm"></div>
+            <div class="fg"><label>First Name *</label><input type="text" id="f-first" placeholder="Jane" required oninput="updQS()"></div>
+            <div class="fg"><label>Last Name *</label><input type="text" id="f-last" placeholder="Smith" required oninput="updQS()"></div>
+            <div class="fg"><label>Email *</label><input type="email" id="f-email" placeholder="jane@email.com" required></div>
+            <div class="fg"><label>Phone *</label><input type="tel" id="f-phone" placeholder="(720) 555-0100" required></div>
+            <div class="fg full"><label>Property Address *</label><input type="text" id="f-addr" placeholder="1234 Main St, Denver CO 80202" required oninput="updQS()"></div>
+            <div class="fg"><label>Unit / HOA</label><input type="text" id="f-unit" placeholder="Unit 4B"></div>
+            <div class="fg"><label>Best Time to Call</label><input type="text" id="f-time" placeholder="Weekdays after 4pm"></div>
             <div class="fg"><label>Property Type</label>
-              <select name="client_proptype" id="f-proptype">
+              <select id="f-proptype">
                 <option>Condo / HOA</option><option>Townhome</option>
                 <option>Single family</option><option>Rental property</option>
               </select>
@@ -663,7 +647,7 @@ hr.divr{border:none;border-top:2px solid var(--bg3);margin:3px 0;}
       <div class="cform" style="margin-bottom:.9rem;">
         <div class="fhdr">Notes</div>
         <div class="fbody">
-          <textarea name="notes" id="f-notes" placeholder="Access instructions, existing equipment, HOA rules, install window, competitor quotes..." style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:8px 10px;font-size:12px;font-family:'Barlow',sans-serif;background:var(--bg2);min-height:72px;resize:vertical;outline:none;"></textarea>
+          <textarea name="message" id="f-notes" placeholder="Access instructions, existing equipment, HOA rules, install window, competitor quotes..." style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:8px 10px;font-size:12px;font-family:'Barlow',sans-serif;background:var(--bg2);min-height:72px;resize:vertical;outline:none;"></textarea>
         </div>
       </div>
 
@@ -726,47 +710,7 @@ hr.divr{border:none;border-top:2px solid var(--bg3);margin:3px 0;}
   </div>
   <div class="pbar">
     <button class="bpri" onclick="showP('client')">Build Quote</button>
-    <button class="bpri2" onclick="showP('playbook')">Playbook →</button>
-  </div>
-</div>
-
-<!-- PLAYBOOK PANEL -->
-<div id="playbook-panel" class="panel">
-  <div class="hero" style="padding-bottom:1.1rem;">
-    <div class="hero-inner"><p class="eyebrow">Step-by-step HOA outreach</p><h1>HOA <em>Playbook</em></h1></div>
-  </div>
-  <div class="content">
-    <p class="sec-head">6-step outreach process</p>
-    <div class="sgrid">
-      <div class="scard" data-step="1"><div class="snum">1</div><h4>Find the board</h4><p>County records or property mgmt. BNI referrals fastest.</p></div>
-      <div class="scard" data-step="2"><div class="snum">2</div><h4>Request 10 minutes</h4><p>"Your residents can get a $3,380–$8,060 check from Xcel just for upgrading their HVAC."</p></div>
-      <div class="scard" data-step="3"><div class="snum">3</div><h4>Lead with math</h4><p>"3-ton: $14,500. Xcel: $6,750. IRA: $2,000. Net: under $6,000 — with AC included."</p></div>
-      <div class="scard" data-step="4"><div class="snum">4</div><h4>Group pricing</h4><p>10+ units = 12% off. 25+ = 18% off. Residents talk to neighbors.</p></div>
-      <div class="scard" data-step="5"><div class="snum">5</div><h4>Leave flyers + 30-day clock</h4><p>One-pager in every mailbox. Group pricing expires in 30 days.</p></div>
-      <div class="scard" data-step="6"><div class="snum">6</div><h4>We handle all paperwork</h4><p>Sparks files every Xcel rebate. This closes HOA deals.</p></div>
-    </div>
-    <p class="sec-head">Group pricing tiers</p>
-    <div class="gtbl">
-      <div class="ghdr">HOA Commitment Discount — 30-Day Lock</div>
-      <div class="grow"><div><div class="gu">10–24 units</div><div class="gn">Locked 30 days from presentation</div></div><div class="gd">12% off</div></div>
-      <div class="grow"><div><div class="gu">25–49 units</div><div class="gn">Coordinate with HOA manager</div></div><div class="gd">18% off</div></div>
-      <div class="grow"><div><div class="gu">50+ units</div><div class="gn">Contact Tim for custom package</div></div><div class="gd">Call Tim</div></div>
-    </div>
-    <p class="sec-head">Say these out loud</p>
-    <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;">
-      <ul class="blist">
-        <li><strong>No commissioned salespeople.</strong> Paid to install right, not to upsell.</li>
-        <li><strong>Factory-direct pricing.</strong> We buy Carrier direct — no distributor markup.</li>
-        <li><strong>Price-beat guarantee.</strong> Bring us a written quote — we'll beat it.</li>
-        <li><strong>We handle the Xcel paperwork.</strong> Sign at install. We submit. You get the check.</li>
-        <li><strong>One-day installation.</strong> Existing ductwork stays. In and out in one visit.</li>
-        <li><strong>Cold-climate rated to -23°F.</strong> Furnace is just backup.</li>
-      </ul>
-    </div>
-  </div>
-  <div class="pbar">
-    <button class="bpri" onclick="showP('flyer')">Print Flyer</button>
-    <button class="bpri2" onclick="showP('calc')">← Calculator</button>
+    <button class="bpri2" onclick="showP('flyer')">Flyer →</button>
   </div>
 </div>
 
@@ -1323,7 +1267,7 @@ function showP(id){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(id+'-panel').classList.add('active');
-  const map={calc:0,client:1,pitch:2,playbook:3,flyer:4};
+  const map={calc:0,client:1,pitch:2,flyer:3};
   document.querySelectorAll('.nav-tab')[map[id]].classList.add('active');
   window.scrollTo(0,0);
 }
