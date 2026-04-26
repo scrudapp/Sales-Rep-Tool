@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sparks — Mariana</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#C0272D;--red-d:#961f24;--red-l:#faecec;
+  --navy:#1A2744;--navy-d:#111b30;--navy-l:#eaedf4;
+  --gold:#E8A021;--gold-l:#fef6e4;
+  --green:#1a6b1a;--bg:#fff;--bg2:#f5f5f3;--bg3:#eeede8;
+  --text:#1a1a18;--text2:#5f5e5a;--text3:#888780;
+  --border:rgba(26,26,24,0.15);--border2:rgba(26,26,24,0.3);
+  --green-bg:rgba(34,139,34,0.06);--green-border:rgba(34,139,34,0.2);
+  --radius-md:8px;--radius-lg:12px;--radius-xl:16px;
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:var(--bg2);color:var(--text);min-height:100vh;}
+
+/* LOGIN */
+.lscr{position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.lbox{background:white;border-radius:var(--radius-xl);padding:2.5rem 2rem;width:300px;text-align:center;}
+.logo-lbl{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:800;color:var(--navy);}
+.logo-lbl span{color:var(--red);}
+.rep-nm{font-family:'Barlow Condensed',sans-serif;font-size:40px;font-weight:800;color:var(--red);margin:10px 0 4px;line-height:1;}
+.lsub{font-size:12px;color:var(--text3);margin-bottom:1.25rem;}
+.pin-dots{display:flex;gap:8px;justify-content:center;margin-bottom:1rem;}
+.pdot{width:16px;height:16px;border-radius:50%;border:2px solid var(--border2);background:var(--bg2);transition:background 0.15s;}
+.pdot.filled{background:var(--navy);border-color:var(--navy);}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px;}
+.pbtn{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:13px 0;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--text);cursor:pointer;transition:all 0.1s;}
+.pbtn:hover{background:var(--navy-l);border-color:var(--navy);}
+.pbtn:active{transform:scale(0.95);}
+.pclr{background:none;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:9px;font-size:12px;color:var(--text2);cursor:pointer;width:100%;}
+.lerr{color:var(--red);font-size:12px;margin-top:6px;min-height:16px;}
+
+/* TOPBAR */
+.topbar{background:var(--navy);height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 1.25rem;position:sticky;top:0;z-index:200;border-bottom:3px solid var(--red);}
+.logo-area{display:flex;align-items:center;gap:10px;}
+.logo-svg{height:28px;width:auto;}
+.rep-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:20px;padding:2px 10px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--gold);}
+.nav-area{display:flex;align-items:center;gap:6px;}
+.nav-tabs{display:flex;gap:1px;height:52px;align-items:stretch;}
+.nav-tab{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:rgba(255,255,255,0.5);background:none;border:none;padding:0 10px;cursor:pointer;position:relative;transition:color 0.15s;white-space:nowrap;}
+.nav-tab:hover{color:rgba(255,255,255,0.9);}
+.nav-tab.active{color:#fff;}
+.nav-tab.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--gold);}
+.admin-btn{background:none;border:1px solid rgba(255,255,255,0.2);border-radius:5px;padding:4px 8px;color:rgba(255,255,255,0.5);font-size:10px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;}
+.admin-btn:hover{color:rgba(255,255,255,0.9);border-color:rgba(255,255,255,0.4);}
+
+/* ADMIN */
+.adm-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center;}
+.adm-ov.open{display:flex;}
+.adm-box{background:white;border-radius:var(--radius-xl);padding:1.75rem;width:400px;max-width:94vw;max-height:88vh;overflow-y:auto;}
+.adm-box h2{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:3px;}
+.adm-note{font-size:11px;color:var(--text3);margin-bottom:1rem;}
+.rep-item{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--bg2);border-radius:var(--radius-md);margin-bottom:6px;}
+.ri-name{font-size:13px;font-weight:600;color:var(--text);}
+.ri-pin{font-family:monospace;font-size:11px;color:var(--text3);margin-top:1px;}
+.ri-del{background:var(--red-l);color:var(--red);border:none;border-radius:var(--radius-md);padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;}
+.adm-add{background:var(--bg3);border-radius:var(--radius-lg);padding:.9rem;margin-top:.9rem;}
+.adm-add h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;}
+
+/* PANELS */
+.panel{display:none;}.panel.active{display:block;}
+
+/* HERO */
+.hero{background:var(--navy);padding:1.75rem 1.5rem 0;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,33,0.12) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:960px;margin:0 auto;}
+.eyebrow{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:7px;}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1;color:#fff;margin-bottom:5px;}
+.hero h1 em{font-style:normal;color:var(--gold);}
+.hero-sub{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6;max-width:480px;margin-bottom:1.1rem;}
+.hstats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,0.08);border-top:1px solid rgba(255,255,255,0.1);}
+.hstat{padding:.8rem 1rem;background:rgba(255,255,255,0.03);}
+.hstat-n{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--gold);line-height:1;}
+.hstat-l{font-size:10px;color:rgba(255,255,255,0.5);margin-top:3px;line-height:1.4;}
+
+/* CONTENT */
+.content{max-width:960px;margin:0 auto;padding:1.25rem 1.5rem;}
+.sec-head{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);border-bottom:1.5px solid var(--border);padding-bottom:5px;margin-bottom:.8rem;}
+
+/* CALC */
+.sys-toggle{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:1.1rem;}
+.sys-card{background:var(--bg);border:2px solid var(--border);border-radius:var(--radius-lg);cursor:pointer;transition:all 0.15s;}
+.sys-card:hover{border-color:var(--border2);}
+.sys-card.active{border-color:var(--red);}
+.sys-body{padding:.85rem 1rem;}
+.sys-card.active .sys-body{background:var(--red-l);}
+.sys-card h3{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.sys-card p{font-size:11px;color:var(--text2);line-height:1.5;}
+.price-from{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--red);margin-top:5px;}
+.szgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:1.1rem;}
+.szbtn{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:8px 4px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.szbtn:hover{border-color:var(--border2);}
+.szbtn.active{border-color:var(--red);background:var(--red-l);}
+.szbtn .tons{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--text);display:block;}
+.szbtn .sqft{font-size:9px;color:var(--text3);margin-top:1px;display:block;}
+.szbtn.active .tons{color:var(--red);}
+.rcard{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.1rem;}
+.rhdr{background:var(--navy);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;}
+.rhdr h3{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#fff;}
+.model-tag{font-size:10px;color:rgba(255,255,255,0.5);font-family:monospace;}
+.rbody{padding:14px;}
+.rrow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bg3);font-size:12px;}
+.rrow:last-of-type{border-bottom:none;}
+.rrow .lbl{color:var(--text2);}
+.rrow .amt{font-weight:600;}
+.amt-p{color:var(--text);font-size:13px;}
+.amt-r{color:var(--green);}
+.amt-t{color:var(--red);font-size:13px;}
+hr.divr{border:none;border-top:2px solid var(--bg3);margin:3px 0;}
+.net-box{background:var(--navy);border-radius:var(--radius-md);padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+.net-lbl{font-size:12px;color:rgba(255,255,255,0.6);}
+.net-sub{font-size:9px;color:rgba(255,255,255,0.4);margin-top:2px;}
+.net-amt{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:700;color:var(--gold);}
+.xpill{background:var(--green-bg);border:1px solid var(--green-border);border-radius:var(--radius-md);padding:6px 11px;font-size:10px;color:var(--green);margin-top:8px;line-height:1.5;}
+.fnote{font-size:9px;color:var(--text3);margin-top:6px;line-height:1.6;font-style:italic;}
+
+/* FORMS */
+.cform{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.9rem;}
+.fhdr{background:var(--navy);padding:10px 14px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#fff;}
+.fbody{padding:14px;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px;}
+.fg{display:flex;flex-direction:column;gap:3px;}
+.fg.full{grid-column:1/-1;}
+.fg label{font-size:9px;font-weight:600;color:var(--text2);letter-spacing:0.04em;text-transform:uppercase;}
+.fg input,.fg select,.fg textarea{border:1.5px solid var(--border);border-radius:var(--radius-md);padding:7px 10px;font-size:12px;color:var(--text);font-family:'Barlow',sans-serif;background:var(--bg2);outline:none;transition:border-color 0.15s;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--navy);background:var(--bg);}
+.fg textarea{resize:vertical;min-height:60px;}
+
+/* PHOTO SLOTS */
+.pgrid2{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:7px;}
+.pslot{aspect-ratio:1;border:2px dashed var(--border2);border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;position:relative;background:var(--bg2);transition:border-color 0.15s;}
+.pslot:hover{border-color:var(--red);}
+.pslot.has{border-style:solid;border-color:var(--navy);}
+.pslot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.sn{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--border2);}
+.sl{font-size:9px;color:var(--text3);text-align:center;z-index:1;}
+.premove{position:absolute;top:3px;right:3px;z-index:2;width:18px;height:18px;border-radius:50%;background:var(--red);color:white;border:none;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pcnt{font-size:10px;color:var(--text3);margin-top:5px;}
+
+/* CATEGORY TABS */
+.atabs{display:flex;gap:5px;margin-bottom:1rem;flex-wrap:wrap;}
+.abtn{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;padding:5px 12px;border-radius:6px;border:1.5px solid var(--border);background:var(--bg);color:var(--text2);cursor:pointer;transition:all 0.15s;}
+.abtn:hover{border-color:var(--border2);color:var(--red);}
+.abtn.active{background:var(--navy);border-color:var(--navy);color:white;}
+
+/* PREVIEW & SUMMARY */
+.preview-box{font-size:11px;background:var(--bg3);padding:8px 12px;border-radius:var(--radius-md);color:var(--text2);line-height:1.7;margin-top:8px;}
+.qsum{background:var(--navy-l);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--text);line-height:1.7;}
+
+/* SUBMIT BUTTON */
+.submit-section{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:.9rem;}
+.submit-section h3{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.submit-section p{font-size:11px;color:var(--text2);margin-bottom:12px;line-height:1.5;}
+.btn-submit{background:var(--red);color:white;border:none;border-radius:var(--radius-md);padding:12px 28px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:background 0.15s;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-submit:hover{background:var(--red-d);}
+.btn-submit:disabled{background:var(--text3);cursor:not-allowed;}
+.submit-note{font-size:10px;color:var(--text3);margin-top:8px;line-height:1.5;}
+
+/* SUCCESS PAGE */
+.success-screen{display:none;position:fixed;inset:0;background:var(--navy);align-items:center;justify-content:center;z-index:8000;}
+.success-screen.show{display:flex;}
+.success-box{background:white;border-radius:var(--radius-xl);padding:2.5rem 2rem;width:340px;text-align:center;}
+.success-icon{font-size:48px;margin-bottom:1rem;}
+.success-box h2{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--green);margin-bottom:8px;}
+.success-box p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:1.25rem;}
+.btn-new{background:var(--navy);color:white;border:none;border-radius:var(--radius-md);padding:11px 24px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;cursor:pointer;width:100%;}
+
+/* PITCH EXPANDABLES */
+.ebox{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;overflow:hidden;}
+.ebox:hover{border-color:var(--border2);}
+.ehdr{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;cursor:pointer;user-select:none;}
+.ehdr-l{display:flex;align-items:center;gap:9px;}
+.eicon{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.exp-icon-red{background:var(--red-l);color:var(--red);}
+.exp-icon-navy{background:var(--navy-l);color:var(--navy);}
+.exp-icon-gold{background:var(--gold-l);color:#96640e;}
+.exp-icon-green{background:var(--green-bg);color:var(--green);}
+.etitle{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--text);}
+.esub{font-size:10px;color:var(--text3);margin-top:1px;}
+.echev{font-size:10px;color:var(--text3);transition:transform 0.2s;flex-shrink:0;}
+.ebox.open .echev{transform:rotate(180deg);}
+.ebody{display:none;padding:0 14px 13px;border-top:1px solid var(--border);}
+.ebox.open .ebody{display:block;}
+.edu-green{border-left:4px solid var(--green);}
+.edu-navy{border-left:4px solid var(--navy);}
+.edu-gold{border-left:4px solid var(--gold);}
+.edu-red{border-left:4px solid var(--red);}
+.blist{list-style:none;margin-top:7px;}
+.blist li{font-size:12px;color:var(--text2);padding:3px 0 3px 14px;position:relative;line-height:1.5;}
+.blist li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;}
+.ctbl{width:100%;border-collapse:collapse;margin:9px 0;font-size:11px;}
+.ctbl th{background:var(--navy);color:#fff;padding:6px 9px;text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;}
+.ctbl th:not(:first-child){text-align:center;}
+.ctbl td{padding:6px 9px;border-bottom:1px solid var(--bg3);}
+.ctbl tr:nth-child(odd) td{background:var(--bg2);}
+.ctbl td:not(:first-child){text-align:center;}
+.good{color:var(--green);font-weight:600;}.bad{color:var(--red);}.hi{color:var(--red);font-weight:700;font-size:13px;}
+.sstmt{background:var(--navy);border-radius:var(--radius-md);padding:10px 13px;color:#fff;font-size:12px;line-height:1.6;margin:8px 0;font-style:italic;}
+.sstmt span{color:var(--gold);font-style:normal;font-weight:700;}
+.cbox{background:var(--red-l);border:1.5px solid rgba(192,39,45,0.2);border-radius:var(--radius-md);padding:10px 13px;margin:7px 0;font-size:11px;color:var(--text);line-height:1.6;}
+.cbox strong{color:var(--red);}
+.oq{font-weight:600;font-size:12px;color:var(--text);margin-bottom:2px;}
+.oa{font-size:11px;color:var(--text2);line-height:1.6;padding-left:11px;border-left:2px solid var(--gold);margin-bottom:8px;}
+
+/* PLAYBOOK */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:1.1rem;}
+.scard{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:.85rem 1rem;position:relative;overflow:hidden;}
+.scard::before{content:attr(data-step);position:absolute;top:-8px;right:9px;font-family:'Barlow Condensed',sans-serif;font-size:64px;font-weight:800;color:rgba(192,39,45,0.05);line-height:1;}
+.snum{display:inline-flex;align-items:center;justify-content:center;background:var(--red);color:white;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;width:20px;height:20px;border-radius:50%;margin-bottom:5px;}
+.scard h4{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.scard p{font-size:11px;color:var(--text2);line-height:1.5;}
+.gtbl{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:1.1rem;}
+.ghdr{background:var(--navy);padding:9px 14px;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:#fff;letter-spacing:0.05em;text-transform:uppercase;}
+.grow{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-bottom:1px solid var(--border);}
+.grow:last-child{border-bottom:none;}
+.gu{font-size:13px;color:var(--text);}
+.gn{font-size:10px;color:var(--text3);margin-top:1px;}
+.gd{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:700;color:var(--green);}
+
+/* FLYER */
+.fly-wrap{background:#555;padding:14px;}
+.flyer{width:8.5in;min-height:11in;margin:0 auto;background:white;box-shadow:0 4px 40px rgba(0,0,0,0.4);font-family:'Barlow',sans-serif;}
+.fl-hdr{background:#1A2744;padding:13px 22px;display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid #C0272D;}
+.fl-logo{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;color:white;letter-spacing:0.05em;}
+.fl-logo span{color:#E8A021;}
+.fl-tag{font-size:9px;color:rgba(255,255,255,0.6);text-align:right;line-height:1.6;}
+.fl-hero{background:#1A2744;padding:18px 22px 0;}
+.fl-hero h1{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:800;color:white;line-height:1;margin-bottom:5px;}
+.fl-hero h1 span{color:#E8A021;}
+.fl-hero p{font-size:11px;color:rgba(255,255,255,0.6);line-height:1.6;max-width:460px;padding-bottom:13px;}
+.fl-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:3px solid #C0272D;}
+.fl-stat{background:#1e2d4f;padding:10px 15px;border-right:1px solid rgba(255,255,255,0.06);}
+.fl-stat:last-child{border-right:none;}
+.fl-sn{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:700;color:#E8A021;}
+.fl-sl{font-size:9px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.fl-body{padding:14px 22px;}
+.fl-sec{font-family:'Barlow Condensed',sans-serif;font-size:8px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:#C0272D;margin-bottom:5px;padding-bottom:3px;border-bottom:1.5px solid #C0272D;}
+.fl-prow{display:flex;gap:10px;align-items:center;margin-bottom:11px;}
+.fl-pi{background:#f0f4f8;border-radius:5px;padding:6px;border:1px solid #e0ddd8;}
+.fl-pi img{height:72px;width:auto;display:block;object-fit:contain;}
+.fl-pd{font-size:10px;color:#5f5e5a;line-height:1.6;flex:1;}
+.fl-pd strong{display:block;font-size:11px;color:#1a2744;margin-bottom:1px;}
+.fl-tbl{width:100%;border-collapse:collapse;margin-bottom:4px;font-size:10px;}
+.fl-tbl th{background:#1A2744;color:white;padding:5px 7px;text-align:left;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;}
+.fl-tbl th:not(:first-child){text-align:center;}
+.fl-tbl td{padding:5px 7px;border-bottom:1px solid #eee;}
+.fl-tbl tr:nth-child(odd) td{background:#f5f5f3;}
+.fl-tbl td:not(:first-child){text-align:center;}
+.fl-tn{font-weight:600;color:#1a1a18;font-size:10px;}
+.fl-ts{font-size:8px;color:#888;}
+.fl-tp{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:#1a1a18;}
+.fl-tx{color:#1a6b1a;font-weight:600;}
+.fl-tt{color:#C0272D;font-weight:700;font-family:'Barlow Condensed',sans-serif;font-size:12px;}
+.fl-2col{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:9px;}
+.fl-why h4{font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;color:#1a1a18;margin-bottom:1px;}
+.fl-why h4 span{color:#1a6b1a;margin-right:2px;}
+.fl-why p{font-size:9px;color:#5f5e5a;line-height:1.4;margin-bottom:5px;}
+.fl-grp{background:#f5f5f3;border:1px solid #e0ddd8;border-radius:5px;padding:8px 11px;}
+.fl-grp table{width:100%;border-collapse:collapse;font-size:10px;}
+.fl-grp th{text-align:left;color:#888;font-size:8px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding-bottom:4px;}
+.fl-grp td{padding:3px 0;border-top:1px solid #e0ddd8;}
+.fl-disc{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;color:#1a6b1a;}
+.fl-ftr{background:#1A2744;padding:11px 22px;display:flex;justify-content:space-between;align-items:center;}
+.fl-fc{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:white;}
+.fl-fu{font-size:11px;color:#E8A021;margin-top:2px;font-weight:600;}
+.fl-fco{text-align:right;font-size:9px;color:rgba(255,255,255,0.6);line-height:1.6;}
+.fl-fco strong{color:#E8A021;}
+
+/* PRINT BAR */
+.pbar{background:var(--bg);border-top:1px solid var(--border);padding:9px 1.5rem;display:flex;align-items:center;gap:7px;position:sticky;bottom:0;z-index:100;}
+.bpri{background:var(--red);color:white;border:none;border-radius:var(--radius-md);padding:8px 16px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:background 0.15s;}
+.bpri:hover{background:var(--red-d);}
+.bpri2{background:transparent;color:var(--text2);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.bpri2:hover{border-color:var(--border2);color:var(--text);}
+.pnote{font-size:10px;color:var(--text3);}
+
+@media(max-width:680px){
+  .sys-toggle,.szgrid,.fgrid,.sgrid,.pgrid2{grid-template-columns:1fr 1fr;}
+  .hstats{grid-template-columns:1fr;}
+  .nav-tab{padding:0 6px;font-size:9px;}
+  .flyer{width:100%;}
+}
+@media print{
+  .topbar,.pbar,#calc-panel,#client-panel,#pitch-panel,#playbook-panel{display:none!important;}
+  #flyer-panel{display:block!important;}
+  .fly-wrap{background:white;padding:0;}
+  body{background:white;}
+}
+
+/* SYSTEM PHOTO GRID — responsive */
+.sys-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.1rem;}
+@media(max-width:500px){
+  .sys-photo-grid{grid-template-columns:1fr;}
+  .sys-photo-grid>div img{height:140px!important;width:100%!important;object-fit:contain;}
+}
+
+/* MOBILE GENERAL FIXES */
+@media(max-width:600px){
+  .topbar{padding:0 .75rem;height:48px;}
+  .nav-tab{padding:0 5px;font-size:9px;}
+  .content{padding:1rem .75rem;}
+  .fgrid{grid-template-columns:1fr!important;}
+  .fg.full{grid-column:1;}
+  .hstats{grid-template-columns:1fr!important;}
+  .sys-toggle{grid-template-columns:1fr!important;}
+  .szgrid{grid-template-columns:repeat(2,1fr)!important;}
+  .sgrid{grid-template-columns:1fr!important;}
+  .atabs{gap:4px;}
+  .abtn{font-size:10px;padding:5px 9px;}
+  .net-amt{font-size:26px!important;}
+  .hero{padding:1.25rem 1rem 0;}
+  .hero h1{font-size:28px!important;}
+  .fbody{padding:11px;}
+  .preview-box,.qsum{font-size:10px;}
+  .rhdr h3{font-size:12px;}
+  .rrow{font-size:11px;}
+  /* Photo inputs — stack label above input, full width */
+  #photo-previews{grid-template-columns:repeat(3,1fr)!important;}
+  .fg input[type="file"]{font-size:10px;padding:4px 6px;}
+  /* Form grid in photo section — already 3-col, keep it */
+}
+</style>
+</head>
+<body>
+
+<!-- Netlify form detection — hidden, must match the visible form fields -->
+<form name="sparks-quote-mariana" netlify netlify-honeypot="bot-field" hidden>
+  <input name="rep_name"><input name="client_first"><input name="client_last">
+  <input name="client_email"><input name="client_phone"><input name="client_address">
+  <input name="client_unit"><input name="client_time"><input name="client_proptype">
+  <input name="category"><input name="system_type"><input name="home_size">
+  <input name="ac_tier"><input name="ac_model"><input name="furnace_tier">
+  <input name="furnace_afue"><input name="furnace_model"><input name="coil_model">
+  <input name="system_price"><input name="xcel_rebate"><input name="ira_credit">
+  <input name="net_cost"><input name="total_price"><input name="notes">
+  <input name="photo_count">
+  <input type="file" name="photo_1" accept="image/*">
+  <input type="file" name="photo_2" accept="image/*">
+  <input type="file" name="photo_3" accept="image/*">
+
+</form>
+
+<!-- LOGIN -->
+<div class="lscr" id="lscr">
+  <div class="lbox">
+    <div class="logo-lbl">SPARKS <span>H&A</span></div>
+    <div class="rep-nm">Mariana</div>
+    <div class="lsub">Enter your PIN to continue</div>
+    <div class="pin-dots">
+      <div class="pdot" id="d0"></div><div class="pdot" id="d1"></div>
+      <div class="pdot" id="d2"></div><div class="pdot" id="d3"></div>
+    </div>
+    <div class="pgrid">
+      <button class="pbtn" onclick="pp('1')">1</button><button class="pbtn" onclick="pp('2')">2</button><button class="pbtn" onclick="pp('3')">3</button>
+      <button class="pbtn" onclick="pp('4')">4</button><button class="pbtn" onclick="pp('5')">5</button><button class="pbtn" onclick="pp('6')">6</button>
+      <button class="pbtn" onclick="pp('7')">7</button><button class="pbtn" onclick="pp('8')">8</button><button class="pbtn" onclick="pp('9')">9</button>
+      <button class="pbtn" onclick="pp('0')" style="grid-column:2">0</button>
+    </div>
+    <button class="pclr" onclick="pc()">Clear</button>
+    <div class="lerr" id="lerr"></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="adm-ov" id="adm-ov">
+  <div class="adm-box">
+    <h2>⚙ Admin — Rep Management</h2>
+    <div class="adm-note">Session only. Contact Tim for permanent changes.</div>
+    <div id="rep-list"></div>
+    <div class="adm-add">
+      <h3>Add New Rep</h3>
+      <div class="fgrid" style="gap:7px;">
+        <div class="fg"><label>Name</label><input type="text" id="an-name" placeholder="First name"></div>
+        <div class="fg"><label>PIN (4 digits)</label><input type="text" id="an-pin" placeholder="e.g. 1005" maxlength="4"></div>
+      </div>
+      <div style="display:flex;gap:7px;margin-top:9px;">
+        <button class="bpri" style="font-size:11px;padding:7px 14px;" onclick="admAdd()">+ Add Rep</button>
+        <button class="bpri2" style="font-size:11px;padding:7px 12px;" onclick="admClose()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-screen" id="success-screen">
+  <div class="success-box">
+    <div class="success-icon">✅</div>
+    <h2>Quote Sent!</h2>
+    <p>The quote for <strong id="success-client"></strong> has been submitted to Sparks. The team will receive it at help@sparks-hvac.com.</p>
+    <button class="btn-new" onclick="resetForm()">Start New Quote</button>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="logo-area">
+    <svg class="logo-svg" viewBox="0 0 160 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 27 C8 18 15 14 13 6 C19 10 21 17 17 23 C21 19 21 13 19 9 C25 15 25 25 19 29 C21 27 21 23 19 21 C17 25 13 27 8 27Z" fill="#E8A021"/>
+      <path d="M10 27 C10 22 14 20 13 14 C17 17 18 22 16 26 C18 23 17 19 16 16 C19 20 19 26 16 28 C10 28 10 27 10 27Z" fill="#C0272D"/>
+      <text x="30" y="24" font-family="'Barlow Condensed',sans-serif" font-weight="800" font-size="20" fill="white" letter-spacing="1">SPARKS</text>
+      <text x="31" y="32" font-family="'Barlow Condensed',sans-serif" font-weight="500" font-size="8" fill="rgba(255,255,255,0.5)" letter-spacing="1.5">HEATING &amp; AIR</text>
+    </svg>
+    <div class="rep-badge">Mariana</div>
+  </div>
+  <div class="nav-area">
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showP('calc')">Calc</button>
+      <button class="nav-tab" onclick="showP('client')">Quote</button>
+      <button class="nav-tab" onclick="showP('pitch')">Pitch</button>
+      <button class="nav-tab" onclick="showP('playbook')">Playbook</button>
+      <button class="nav-tab" onclick="showP('flyer')">Flyer</button>
+    </div>
+    <button class="admin-btn" onclick="admOpen()">⚙ ADMIN</button>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- CALC PANEL -->
+<div id="calc-panel" class="panel active">
+  <div class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Carrier 37MUHAQ — Authorized Dealer Pricing</p>
+      <h1>Heat Pump Calculator</h1><h2 style="font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:600;color:var(--gold);margin-top:4px;margin-bottom:5px;">Add a Heat Pump. <em style='font-style:normal'>Keep the Furnace.</em></h2>
+      <p class="hero-sub">Real pricing. Real rebates. Show clients exactly what they pay and what comes back.</p>
+      <div class="hstats">
+        <div class="hstat"><div class="hstat-n">$3,380–$8,060</div><div class="hstat-l">Xcel rebate — direct to customer</div></div>
+        <div class="hstat"><div class="hstat-n">Up to $2,000</div><div class="hstat-l">Federal IRA 25C tax credit</div></div>
+        <div class="hstat"><div class="hstat-n">~10 weeks</div><div class="hstat-l">Xcel check post-install</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <p class="sec-head">Step 1 — System type</p>
+    <div class="sys-toggle">
+      <div class="sys-card active" onclick="setSys('keep',this)">
+        <div class="sys-body"><h3>Keep Existing Furnace</h3><p>Heat pump + coil. Furnace stays as cold-weather backup. One-day install using existing ductwork.</p><div class="price-from">From $13,000</div></div>
+      </div>
+      <div class="sys-card" onclick="setSys('dual',this)">
+        <div class="sys-body"><h3>Dual Fuel — New Payne Furnace</h3><p>Heat pump + coil + brand-new high-efficiency Payne furnace. Best when existing furnace is aging.</p><div class="price-from">From $14,500</div></div>
+      </div>
+    </div>
+    <p class="sec-head">Step 2 — Home size</p>
+    <div class="szgrid">
+      <button class="szbtn" onclick="setSz('under1200',this)"><span class="tons">1.5t</span><span class="sqft">&lt;1,200</span></button>
+      <button class="szbtn" onclick="setSz('1200_1500',this)"><span class="tons">2t</span><span class="sqft">1,200–1,500</span></button>
+      <button class="szbtn" onclick="setSz('1500_1800',this)"><span class="tons">2.5t</span><span class="sqft">1,500–1,800</span></button>
+      <button class="szbtn active" onclick="setSz('1800_2200',this)"><span class="tons">3t</span><span class="sqft">1,800–2,200</span></button>
+      <button class="szbtn" onclick="setSz('2200_2400',this)"><span class="tons">3t</span><span class="sqft">2,200–2,400</span></button>
+      <button class="szbtn" onclick="setSz('2400_3500',this)"><span class="tons">4t</span><span class="sqft">2,400–3,500</span></button>
+      <button class="szbtn" onclick="setSz('over3500',this)"><span class="tons">5t</span><span class="sqft">&gt;3,500</span></button>
+    </div>
+    <p class="sec-head">Step 3 — Net cost</p>
+    <div class="rcard">
+      <div class="rhdr"><h3 id="res-title">Keep Furnace — 3 Ton</h3><span class="model-tag" id="res-model">37MUHAQ36AA3</span></div>
+      <div class="rbody">
+        <div class="rrow"><span class="lbl">Sparks price</span><span class="amt amt-p" id="res-price">$14,500</span></div>
+        <div class="rrow"><span class="lbl">Xcel rebate <em style="font-size:9px;color:var(--text3)">(~10 wks direct)</em></span><span class="amt amt-r" id="res-xcel">–$6,750</span></div>
+        <div class="rrow"><span class="lbl">Federal IRA 25C <em style="font-size:9px;color:var(--text3)">(tax return)</em></span><span class="amt amt-r" id="res-fed">–$2,000</span></div>
+        <hr class="divr">
+        <div class="rrow"><span class="lbl" style="font-weight:600;color:var(--text)">Total rebates &amp; credits</span><span class="amt amt-t" id="res-total">–$8,750</span></div>
+        <div class="net-box">
+          <div><div class="net-lbl">Estimated net cost</div><div class="net-sub">After Xcel + IRA credit</div></div>
+          <div class="net-amt" id="res-net">$5,750</div>
+        </div>
+        <div class="xpill" id="res-xpill">Xcel rebate: $6,750 — Sparks files all paperwork. Check arrives ~10 weeks post-install.</div>
+        <p class="fnote">* IRA 25C is dollar-for-dollar tax reduction. Price includes heat pump, coil, labor, permits, thermostat, haul-away.</p>
+      </div>
+    </div>
+  </div>
+  <div class="pbar">
+    <button class="bpri" onclick="showP('client')">Build Client Quote →</button>
+    <button class="bpri2" onclick="showP('pitch')">Pitch Scripts</button>
+  </div>
+</div>
+
+<!-- CLIENT QUOTE PANEL — Netlify Form -->
+<div id="client-panel" class="panel">
+  <div class="hero" style="padding-bottom:1.1rem;">
+    <div class="hero-inner">
+      <p class="eyebrow">Rep: Mariana — Submit a quote to Sparks</p>
+      <h1>Client <em>Quote</em></h1>
+      <p class="hero-sub">Fill in client details, choose system, attach photos. Hit Submit — goes straight to help@sparks-hvac.com.</p>
+    </div>
+  </div>
+  <div class="content">
+
+    <form name="sparks-quote-mariana" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="quote-form" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
+      <input type="hidden" name="form-name" value="sparks-quote-mariana">
+      <input type="hidden" name="bot-field" style="display:none">
+      <input type="hidden" name="rep_name" value="Mariana">
+      <input type="hidden" id="h-category" name="category" value="Heat Pump">
+      <input type="hidden" id="h-system_type" name="system_type" value="">
+      <input type="hidden" id="h-home_size" name="home_size" value="">
+      <input type="hidden" id="h-ac_tier" name="ac_tier" value="">
+      <input type="hidden" id="h-ac_model" name="ac_model" value="">
+      <input type="hidden" id="h-furnace_tier" name="furnace_tier" value="">
+      <input type="hidden" id="h-furnace_afue" name="furnace_afue" value="">
+      <input type="hidden" id="h-furnace_model" name="furnace_model" value="">
+      <input type="hidden" id="h-coil_model" name="coil_model" value="">
+      <input type="hidden" id="h-system_price" name="system_price" value="">
+      <input type="hidden" id="h-xcel_rebate" name="xcel_rebate" value="">
+      <input type="hidden" id="h-ira_credit" name="ira_credit" value="">
+      <input type="hidden" id="h-net_cost" name="net_cost" value="">
+      <input type="hidden" id="h-total_price" name="total_price" value="">
+
+      <p class="sec-head">Client information</p>
+      <div class="cform">
+        <div class="fhdr">Customer Details</div>
+        <div class="fbody">
+          <div class="fgrid">
+            <div class="fg"><label>First Name *</label><input type="text" name="client_first" id="f-first" placeholder="Jane" required oninput="updQS()"></div>
+            <div class="fg"><label>Last Name *</label><input type="text" name="client_last" id="f-last" placeholder="Smith" required oninput="updQS()"></div>
+            <div class="fg"><label>Email *</label><input type="email" name="client_email" id="f-email" placeholder="jane@email.com" required></div>
+            <div class="fg"><label>Phone *</label><input type="tel" name="client_phone" id="f-phone" placeholder="(720) 555-0100" required></div>
+            <div class="fg full"><label>Property Address *</label><input type="text" name="client_address" id="f-addr" placeholder="1234 Main St, Denver CO 80202" required oninput="updQS()"></div>
+            <div class="fg"><label>Unit / HOA</label><input type="text" name="client_unit" id="f-unit" placeholder="Unit 4B"></div>
+            <div class="fg"><label>Best Time to Call</label><input type="text" name="client_time" id="f-time" placeholder="Weekdays after 4pm"></div>
+            <div class="fg"><label>Property Type</label>
+              <select name="client_proptype" id="f-proptype">
+                <option>Condo / HOA</option><option>Townhome</option>
+                <option>Single family</option><option>Rental property</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="sec-head">System photos — up to 3</p>
+      <div class="cform">
+        <div class="fhdr">Current System Photos</div>
+        <div class="fbody">
+          <p style="font-size:11px;color:var(--text2);margin-bottom:7px;">These photos submit directly with the form — no manual attachment needed.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+            <div class="fg"><label>Photo 1</label><input type="file" name="photo_1" accept="image/*" capture="environment" onchange="previewPhoto(this,0)" style="font-size:11px;padding:5px 8px;"></div>
+            <div class="fg"><label>Photo 2</label><input type="file" name="photo_2" accept="image/*" capture="environment" onchange="previewPhoto(this,1)" style="font-size:11px;padding:5px 8px;"></div>
+            <div class="fg"><label>Photo 3</label><input type="file" name="photo_3" accept="image/*" capture="environment" onchange="previewPhoto(this,2)" style="font-size:11px;padding:5px 8px;"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;" id="photo-previews">
+            <div id="prev-0" style="aspect-ratio:1;background:var(--bg3);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text3);border:1.5px dashed var(--border2);">1</div>
+            <div id="prev-1" style="aspect-ratio:1;background:var(--bg3);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text3);border:1.5px dashed var(--border2);">2</div>
+            <div id="prev-2" style="aspect-ratio:1;background:var(--bg3);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text3);border:1.5px dashed var(--border2);">3</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="sec-head">Product category</p>
+      <div class="atabs" id="cat-tabs">
+        <button type="button" class="abtn active" onclick="setCat('hp',this)">Heat Pump</button>
+        <button type="button" class="abtn" onclick="setCat('ac',this)">AC Replacement</button>
+        <button type="button" class="abtn" onclick="setCat('full',this)">Full System</button>
+        <button type="button" class="abtn" onclick="setCat('furnace',this)">Furnace Only</button>
+      </div>
+
+      <!-- HEAT PUMP -->
+      <div id="cat-hp" class="cform" style="margin-bottom:.9rem;">
+        <div class="fhdr">Heat Pump — Carrier 37MUHAQ Inverter Series</div>
+        <div class="fbody">
+          <div class="fgrid">
+            <div class="fg"><label>System Type</label>
+              <select id="hp-type" onchange="updQS()">
+                <option value="keep">Keep Existing Furnace</option>
+                <option value="dual">Dual Fuel — New Payne Furnace</option>
+              </select></div>
+            <div class="fg"><label>Home Size</label>
+              <select id="hp-size" onchange="updQS()">
+                <option value="under1200">Under 1,200 sqft</option>
+                <option value="1200_1500">1,200–1,500 sqft</option>
+                <option value="1500_1800">1,500–1,800 sqft</option>
+                <option value="1800_2200" selected>1,800–2,200 sqft</option>
+                <option value="2200_2400">2,200–2,400 sqft</option>
+                <option value="2400_3500">2,400–3,500 sqft</option>
+                <option value="over3500">Over 3,500 sqft</option>
+              </select></div>
+            <div class="fg"><label>Coil Size</label>
+              <select id="hp-coil" onchange="updQS()">
+                <option value="A">Coil A (smaller)</option>
+                <option value="B">Coil B (larger)</option>
+              </select></div>
+          </div>
+          <div class="preview-box" id="hp-preview"></div>
+        </div>
+      </div>
+
+      <!-- AC REPLACEMENT -->
+      <div id="cat-ac" class="cform" style="margin-bottom:.9rem;display:none;">
+        <div class="fhdr">AC Replacement — Outdoor Unit + Materials</div>
+        <div class="fbody">
+          <div class="fgrid">
+            <div class="fg"><label>Home Size</label>
+              <select id="ac-size" onchange="updQS()">
+                <option value="under1200">Under 1,200 sqft</option><option value="1200_1500">1,200–1,500 sqft</option>
+                <option value="1500_1800">1,500–1,800 sqft</option><option value="1800_2200" selected>1,800–2,200 sqft</option>
+                <option value="2200_2400">2,200–2,400 sqft</option><option value="2400_3500">2,400–3,500 sqft</option>
+                <option value="over3500">Over 3,500 sqft</option>
+              </select></div>
+            <div class="fg"><label>Tier</label>
+              <select id="ac-tier" onchange="updQS()">
+                <option value="good">Good — Payne (14–15 SEER)</option>
+                <option value="better">Better — Carrier Comfort (16–17 SEER)</option>
+                <option value="best">Best — Carrier Performance (18+ SEER)</option>
+              </select></div>
+          </div>
+          <div class="preview-box" id="ac-preview"></div>
+        </div>
+      </div>
+
+      <!-- FULL SYSTEM -->
+      <div id="cat-full" class="cform" style="margin-bottom:.9rem;display:none;">
+        <div class="fhdr">Full System — AC + Furnace + Materials</div>
+        <div class="fbody">
+          <div class="fgrid">
+            <div class="fg"><label>Home Size</label>
+              <select id="fs-size" onchange="updQS()">
+                <option value="under1200">Under 1,200 sqft</option><option value="1200_1500">1,200–1,500 sqft</option>
+                <option value="1500_1800">1,500–1,800 sqft</option><option value="1800_2200" selected>1,800–2,200 sqft</option>
+                <option value="2200_2400">2,200–2,400 sqft</option><option value="2400_3500">2,400–3,500 sqft</option>
+                <option value="over3500">Over 3,500 sqft</option>
+              </select></div>
+            <div class="fg"><label>AC Tier</label>
+              <select id="fs-tier" onchange="updQS()">
+                <option value="good">Good — Payne</option>
+                <option value="better">Better — Carrier Comfort</option>
+                <option value="best">Best — Carrier Performance</option>
+              </select></div>
+            <div class="fg"><label>Furnace AFUE</label>
+              <select id="fs-afue" onchange="updQS()">
+                <option value="80">80% AFUE — Standard</option>
+                <option value="96">96% AFUE — High Efficiency</option>
+              </select></div>
+            <div class="fg"><label>Furnace Tier</label>
+              <select id="fs-ftier" onchange="updQS()">
+                <option value="payne">Good — Payne</option>
+                <option value="better">Better — Carrier Single Stage</option>
+                <option value="best">Best — Carrier Two Stage</option>
+              </select></div>
+          </div>
+          <div class="preview-box" id="fs-preview"></div>
+        </div>
+      </div>
+
+      <!-- FURNACE ONLY -->
+      <div id="cat-furnace" class="cform" style="margin-bottom:.9rem;display:none;">
+        <div class="fhdr">Furnace Replacement Only</div>
+        <div class="fbody">
+          <div class="fgrid">
+            <div class="fg"><label>Home Size</label>
+              <select id="fn-size" onchange="updQS()">
+                <option value="under1200">Under 1,200 sqft</option><option value="1200_1500">1,200–1,500 sqft</option>
+                <option value="1500_1800">1,500–1,800 sqft</option><option value="1800_2200" selected>1,800–2,200 sqft</option>
+                <option value="2200_2400">2,200–2,400 sqft</option><option value="2400_3500">2,400–3,500 sqft</option>
+                <option value="over3500">Over 3,500 sqft</option>
+              </select></div>
+            <div class="fg"><label>AFUE Efficiency</label>
+              <select id="fn-afue" onchange="updQS()">
+                <option value="80">80% AFUE — Standard</option>
+                <option value="96">96% AFUE — High Efficiency</option>
+                <option value="95">95% AFUE — Carrier Better</option>
+              </select></div>
+            <div class="fg"><label>Furnace Tier</label>
+              <select id="fn-tier" onchange="updQS()">
+                <option value="payne">Good — Payne</option>
+                <option value="better">Better — Carrier Single Stage</option>
+                <option value="best">Best — Carrier Two Stage</option>
+              </select></div>
+          </div>
+          <div class="preview-box" id="fn-preview"></div>
+        </div>
+      </div>
+
+      <div class="cform" style="margin-bottom:.9rem;">
+        <div class="fhdr">Notes</div>
+        <div class="fbody">
+          <textarea name="notes" id="f-notes" placeholder="Access instructions, existing equipment, HOA rules, install window, competitor quotes..." style="width:100%;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:8px 10px;font-size:12px;font-family:'Barlow',sans-serif;background:var(--bg2);min-height:72px;resize:vertical;outline:none;"></textarea>
+        </div>
+      </div>
+
+      <div class="qsum" id="qsum">Fill in client details and select a product category above.</div>
+
+      <div class="submit-section">
+        <h3>Submit Quote to Sparks</h3>
+        <p>This sends the full quote — client info, system selection, model numbers, pricing, and photos — directly to help@sparks-hvac.com via Netlify.</p>
+        <button type="submit" class="btn-submit" id="submit-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+          Submit Quote to Sparks
+        </button>
+        <div class="submit-note">Required fields marked *. Photos attach automatically — no manual step needed.</div>
+      </div>
+
+    </form>
+  </div>
+  <div class="pbar">
+    <button class="bpri" onclick="document.getElementById('submit-btn').click()">Submit Quote</button>
+    <button class="bpri2" onclick="showP('calc')">← Calculator</button>
+  </div>
+</div>
+
+<!-- PITCH PANEL -->
+<div id="pitch-panel" class="panel">
+  <div class="hero" style="padding-bottom:1.1rem;">
+    <div class="hero-inner">
+      <p class="eyebrow">Scripts, closers, objections &amp; education</p>
+      <h1>Pitch <em>Scripts</em></h1>
+      <p class="hero-sub">Tap any box to expand. Switch tabs for each audience.</p>
+    </div>
+  </div>
+  <div class="content">
+    <div class="atabs">
+      <button class="abtn active" onclick="setPitch('hoa',this)">HOA Board</button>
+      <button class="abtn" onclick="setPitch('owner',this)">Homeowner</button>
+      <button class="abtn" onclick="setPitch('landlord',this)">Investor</button>
+      <button class="abtn" onclick="setPitch('new',this)">New Construction</button>
+    </div>
+    <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:.9rem;">
+      <div style="background:var(--navy);padding:14px 18px;position:relative;">
+        <div style="position:absolute;top:2px;left:12px;font-family:'Barlow Condensed',sans-serif;font-size:64px;color:rgba(232,160,33,0.15);line-height:1;">"</div>
+        <p id="pquote" style="font-size:13px;color:#fff;line-height:1.7;font-style:italic;position:relative;z-index:1;padding-left:5px;"></p>
+      </div>
+    </div>
+    <div id="psections"></div>
+    <p class="sec-head" style="margin-top:1.25rem;">System photos — for reference</p>
+    <div class="sys-photo-grid">
+      <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+        <div style="background:var(--bg2);padding:12px;display:flex;justify-content:center;"><img src="data:image/jpeg;base64,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" alt="Carrier 37MUHAQ heat pump" style="height:110px;width:auto;object-fit:contain;"></div>
+        <div style="padding:10px 12px;"><p style="font-size:11px;font-weight:600;color:var(--navy);margin-bottom:2px;">Carrier 37MUHAQ — Ducted Heat Pump</p><p style="font-size:10px;color:var(--text2);line-height:1.5;">The outdoor unit that pairs with your existing furnace and ductwork. Cold climate inverter — rated to 0°F (–23°F select models). This is what goes outside the home.</p></div>
+      </div>
+      <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;">
+        <div style="background:var(--bg2);padding:12px;display:flex;justify-content:center;"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAcFBQYFBAcGBgYIBwcICxILCwoKCxYPEA0SGhYbGhkWGRgcICgiHB4mHhgZIzAkJiorLS4tGyIyNTEsNSgsLSz/2wBDAQcICAsJCxULCxUsHRkdLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCz/wAARCAC0AN8DASIAAhEBAxEB/8QAHAAAAQUBAQEAAAAAAAAAAAAAAAECAwQFBgcI/8QAThAAAgEDAgIGBAgKCAQGAwAAAQIDAAQRBRIhMQYTFCJBUSMyYXEzQlNygZGhsQcVFiRDUmKCk8ElY3ODorLC0ZKj4fA1RFRks7Q0NsT/xAAaAQEBAQEBAQEAAAAAAAAAAAAAAQIDBAYF/8QAKBEBAAIABQMDBAMAAAAAAAAAAAERAgMhMVEEEkEFIjITYXGBocHw/9oADAMBAAIRAxEAPwD6Bmv3W5liG0bCBk+7NIl7IWwzrioL04vZOPl91MR2HJiKrnc2vdr/AG1pRd/trUUUrkcTn3ipesb2fVRqz+0D5RaXtA/XWmdY3nR1reyoH9pX5RaO0r8otN6xvZR1jZ8KB/aU+UWjtKfKLTesb2Uu80UvaU+UWjtKfKLRvNG8+ygTtUfyq0dpT5RaN5o6w0B2qP5VaBdRfKrS7z50m9qAN5CBxlUUgvIicCVTS9Y3nR1jCgBdRHcBICVODjwo7QP1h9VQW8rtPdZPASAD2d1an6xqIO0D9f7KDcj9cfVSGVqDI3mKKO1L8oPqppvUH6VakVyw58qYznzNEN7cnyqfXUlnci6hMgKkbioKnIOKiJpdNIMcozykPDyqkLlFFFRph35xqMn0fdTENJqJ/pKX6Puoh7zKKrlO69GMRinim0vjRo6imM6xoXdgqqMkk4ArJuNZkljLWKosC+tdXB2xj3Dm1CZbLOqKWZgqjmScAVmzdI9LgJUXQmcfFhUufsriNY6UaRbXDRXNxPq94o3NEc7Ix5lB6o9rbR7a5eX8JV3dB/xTbxRW0fAvbR9YB73XEY/i1aZ7perflQWP5vpF9KPMqFqaPW76SF5F0aUbWA2GQBiD4jhivCJ/wg6xdSmKHUd58QtxG5+qNZj9taJ1zXfyRjm6+439uYcp+XVg/wDpf9OPb4UouXsx6RNGM3OlXcQHMja386nt+kWl3OALkRMfiygp99eC2/4QdYtZVin1AL4ANcpGfqkWGtyP8ITwop1e1Q278FmniMQJ/tB6M/xDSi5e3h1dAysGU8iDkGjNeaab0jsgA9reS2EhG4I2XjYeYwOK+3BHtrrbPpFgIL5FVZBlLiI7o3HnkZ4e0VKXub2aM8KYrrIodGDK3EEHINOzUaLSHlRmighg+GuD/WD/ACip6gi+Fm+eP8oqXNVC0ZpKM0U4HBppPGkpxoGGm6e4RpVJ4GQ04mq9uQOt+eaI16Kgt5t42nmPtqeo25zUzjVJfo+6pbIbmJ8hVfVW/pWYe77qt2A9Bu/WNVy8rYFRzzJbxl3z5AAZLHyApzOEQsxwBXPdIdfh0O27RN37uTuQxAjIJ8BnhnAJJPAAEngKLMoekWt2mlW3adWcMcgRWi5YbjyBA4ux8FA/3rzuTppc9KLy40qaUW0V36C2cOQI7geqhdG4k+qyRZKg5ZxXK67rs2tXctzNOHjZCes3MimNjjIYd5YWPAbfSTngMLWbh9zLtdWIFtt2ENw4iHbH4+PZoiAOcr86rJbiMxvIlyqhbZ9siyrGEgfPIg5gib2HrpfPjSORvR7rBlPGM3HFyP2TOryH+7gUeVb2sFtVtLbpFE7G4J7HcyK/ejmHLa8YbbvHNLZc7gwL8KwIldIZYYFdD+mjiVlPvkSJsj3zz581FBOXuFXddPMi+HaDKo+jrp4R/gFawmtj0LU9qs//ABA8c2mM9UOHw2M/vZ9mONZNlGgP5iiZHPsiITn29mhkP1yk10kct9+SajOob+3EY/PN2OqHt3Y+jH00GCpuWXdavK6+PZzKR/yJ5h/gNJEAZHktCBMvGQ2576/OaBUlH95A4qzeW8bD89VMnl2tEzn2dphjP1SA1WkjkaKKGdXducMcys598aStu+m3nJ9lA+2UrPG1oerNw21DB1QWZ88hjFvM3sIhl8uNdn+VDaDPHpayRFYH6u6k25hluTjcjbjuRuAChypPNXbODi6W50y2n1+R83GeyW7NINzzH9Z5Nu4oOUdyud20B+NYZ37lwHZwDbDahLceJhCy8T5m0myCOMTcqD23RNaBiM9iSYx8NaueKHxxnB4e4EciBXXWt1FeQCWFsqeBB5g+Rr5x0XXZtCniuIpVFuibshmZEjBwXUsNzQj1WVvSQk4O5MivYNA12O+XtNrgTqB11vkd4eY+vn7RxIKkliadpRUUMyTwrLG25GGQakqNo4vhZvnj/KK4LpH+F3StJ1BtN02B9VvVJBWP1QRz5c8Y58B7a7tEDtcK3JmwfpUV4Nr34Ldd6O6lqNzptuNVsL2J4XwSJFViCeWSDlR4YIyPGv3PRun6TPzMUdViriLqJ/f9aW8+dix4YjsSaj+HLpBHNtjsIYQQGG1VYYIyOOW8Khtvw5dJSXZrON0jXc+Y1wACB5DzFc2l9r+l2cNlbaELd7ccGRmJ3bZFDEZ5jrC3tIHkBRa6x0ji6lJdJe4WNYkVZ2b4m4k8TxZmbcSfFV8BX3UemdH26ZOGf3H+/l+f9XHfyl6XoX4d7G6mWHWLB7TJ2mVAcKfaDn769VtrqC9tIrq2lWaCVdyOpyGFfOVn0K6Z9MIbe1kt3tbJGZnd2IViSOJ8DgBQMcscuJr3zozoidG+jVnpMcpmFsmC5+MScn6K+P8AXOk6LI7Z6eax3rhibiub8fh7cjHmYvls1DVa3OWm9j1OTWU148VxNBBEZriV+4g+8+Q9tfMvTK7NerbSRoDmWRgqKOZNbVZum6ULVjcXDCa7cd58cFH6q+Q++tKo1DldWbGszfR9wrUtBttYx7M1kaud2uTL837hWyO5EAOeAKrHlV1G9isrSW7nZUhgBYluQxzJ9gr5/wCl3SCbXNUmMzKI+KtHPlVC4DmNyOShMSzEccbIxzNejfhC6VXGlSpa2JjeUBVEUgBSVnO1EYHhtLZZv2Y2rzorouvkPY3EOmXjkMkd1k2s2S8qsWPFAxBuHVsggRKWA4VUYamUyb169n37924RylymdxPJJSneZuVvFgDvGo02KoC9X1fVrH3Y2ROqc9xQg7wjY+pCvpJvWchTVu+025024ktry3MTBSSLvky/CEyEeuuPTzEEhmaOMHwqsSwZt5mVgXz10m1wxXc+9x6jlcNNIPg0KxLgmg1+j97HBemzvGkNpfqbCcA5bI9VQI/WZDx6mHEaDO9ySaztUsZNNLWl2sarZzdVlur6pG5jaWAgjJGCFjSV8EZNQgBiV2AqwSIp1RAKt6kZiU7gp5pbIQWHelOK6C43610fjv0LHUNNItZJFfLyQ5woDxISSpO1kgwBlAX4UGTfMwt0e9Pccd3tXL6DcyJw+bCBWksNmvQqPhZdX29j6trtz1Q/qdv259tRxWbdTHHbK8cnORbZSjg/tCAM4Pz5s+dbB7RF0ViXrZjJ21uTzlj6Nf8A3W//AL9XxojM04ns7taghAO+bUkKB7ezySL/AMUWKhstPN+EtLYRCK9l6ssBH1Lnmd20G3kwMkh1ifAODU8LE3BiugzTE+jWZWaQn9lZgkhP9nKT5A1pGRtM0dpySb7VfzfcTmQQ59UtKoyzkYEdxzAYK/EUGdrd4Lm9Fvah+z2g/F1uB6x84/ScnbmbefKuMdW+QKyGdWiJPVGIxFSWV2jMKHvAg99oVPrRt6W3OGUlRUzBRHxCFBG6FTE8iiNfXTq27zRr8e3fMkXrxkgUxw6SZImDhlO5ZBJKHVNwKtyeVU70b8p4tyN3hRo1jKJS7NKkok3sQRLMsgXO7I4PMid7I7txDnPeFavR3VbjS7qMWzxRNEcwFTviQ7N/Vg8zC0eXQ8+rLLziWs+ztZrueO3tIWkc7QiWAzgD0g6o+QB6+Anl6WI+VarWulaATJqcq3d3Flmt7FyIIArJIxLjmELidEXBCPIucCiPaejmsQahZxXkGVguSVeNvWgmBwyN7QQQfoPjXQ15R0M6TXF3rRsL0pBDdoY1t0UKtvPHnKpjwIVxnx6tD8avUbWUyQAvjevdb3ijUFi+Fm+f/pFS8qij+Em+f/IU8nhUUMUY5bax8zg0nogeAQH2YriW07pa91O3a7pYzIxQBlwFzw+yh9M6WBTtu7rPzhVZ7vs7jdu47s+3OaKzNBS8j0eJb93e5GQ7PzPE8/orSFRqJsxuNLpUIElzLwyz45cRimnnU+mfBzf2h+4UI3XaKKKjbk9SAbpI6+bJ9wrXnO2M+FZl2uelh+cv+WrGtyNHpk5Q4fqyF954D76rly8G6bXxv9alaUlYG3PIwOCqOrZI9q20UmPbMK5xmnO4zWiSSkkyQeDuWQtH7mla3g+bC4862NUliu9YuW2BoGndTn5MSbP/AIbNx+8ay3hvXVWQhbsgHP8AW7Rg/wAe9z74x5VWWxpOtzpClhexpqtgrhlWfiC28kSBuaBpEmnY8gkaDGKcdAt9RthcdH5nmRUVjaXa5njGBKpZf0qruM7hcsztGpAArHt0g9IJLqSGzaNgBGud0RBG33dmtcf33tqZO2RTK/WZvFfcVzjdNvViPc1zLGp/ZtyOVFVZV2s++NowBIGW4kZSgIDyCRxxHAhp3HeJZYl8a0dIvzp+pCd7V5lkUWs8Lx4aaNl+BKLxBKnK26YVBhpGzWnHrNpqcYj1duuYBeq1NVBlABZo3lU4Eqjq5Lhgcfoxx4VS1HQpbG0a7jaK50wKUNyHbYiEbyk3x04eklzhpHdUHCg2tRsrWwEVubmKSxRVNs7mLqmUju7d2IV4fFRHORxNLd2UUXRBGw2ztbv3kXZ6i/8AtSmPo/ePIZ9kZdX0h7XEqalpis0LH0cpi4NJCzRjKsoIfqYtoQd1mzUBZz0WtJI3EzG/lIMXeb4NOWLneT7nJ9lET6FZxXUrKdsemFd85TqxC6ggFe6Wt3YkhQrLG2WGDUOq3zahfyXMiCPKPAsYiLbI1HeiEbd5gqgF7aTJxl42NW7+4fTrIacQ0l5c4N7IAJZCdu5YMsoMpVCWaCYbmDHaxK1XtNIkntReTTpZaftGLkSMwZUXeohfi0hUelhcAsAHjbhRVAbsgr1xIKY6iTe5Kruj2OfXdU78Eh4ugaJskVoHRYdOhE+tzrYQhSwhtBmdlGZSYl+IoIFxEW4r6RNpHCnya3Y6SrR6XmGXvI+oOo3IC43NEnFY0VpIrhRx7ruARXOyXMk0zThD2tmDqjsW2yhndEJPMLPHcRcfiTgUG3ea7cLFJY6esOjW24q3UHJUiQZZn5sqSvFKAML1c7d3hWQpnG0wW6o67THbkZCsN5SI+wOtzbfNdB5VAEsThQpazwBxPEwgKv221yn0wDypWinCM21hdgEkg/pgpb/7FmT/AHvtoNfRbmSzaN4G64WzJJA59Y7AjRN+9G1vn5r+2voXTLqK5ijuIDmK5jWVD7MAj/CRXzZZ5tL782J6oMRGp/UD4T/l3UX/AACvdugk6zdFbIqciEmMewBiAP8AhK0I3dRH8JN87+QqSo4/hJvn/wAhT6jYwp8KNq+VGaTNA73UDnTacKCJzhjU2mNkTL+3moJThzUmlevP76EbtKiiio25q4//AG0+8H/DT9ZVmiAAJBePl5bhUVycdLj7x/lp2oAwu2x2ALoSc8ssK05cvn6WyuvxdKBbz5a38YmzlrZ/Z53DVJPDcR3ss4t5u5M8g9G3hNcyDw/qI/s9lWbzXNYt7eUfjW93JBn4duYtyT4+cL/bS3Gs6w1zPCuq3oJkeMYnbn1t3GPHzaL6l8hRliCwuNyWgt5QhVbc+jPIizh8vIyfWaabe7a2a8MU3WGNrgdw+t1VxOPD9eVPqFaK9ItYSdJjqt71e5ZPh2xt3Wch8f1Xb6M1GekmtjT2i/G18JlgKfDtneLeZfPn1kB+k0DTpSx3Bt3gfqFk6ojaeKCQRn/lWrj98+dOtLzVNJxd2vWJdMmWBUlZHIRyrDkVM90pIPMRAVpHpLqj3p/pe7WJ5ufXNgKZyM8/BLqI+5R5VFb630jv0iitb/UZbt0UrDHMxLOUjIX6ZLaePyy/HnRXoHQXo7puq3basbBrUWbmJYUbEMzEbt+3mB3txXO0s5JzgY9Fa0tntuzPbxNBjHVFAUx5bcYrlug+oMLeSxu9QW6uGPWxkyb227QNpblu4ZwCcZPka64++pLUPJPwgaNp/RvVE1OKzNw18w7077o4AJE445uUZxIgY93DgcDiuBvukGoXlsLq643UXpUGOEbhWlCKOQCzW0ygfqyEV6p+ETVb+7mTTtAvh2m1OLqOGQdau7acgH1tsYkYgZYZXhxrzzT+leuzu73Op3MLohkELAZLbJJCh4cCO0QKR5gCqzKpcafAthHDnuSTi2x/VMzQKP4VxEP3B5VjLdHqlvmx1mwXR+dst7k/445f+I16Bquu6vaQIx1KQYuo0z3eKiZA3h+rFKfrrlY+l/SOSwUJqEzStb/JoTuNvH+z+vOv1USGTLYx7ZLRRgLuthx8ALyD7lj+oUsE+3UIpjna86SnJ8DPbS//AND/AF10knS3XEuHkfUWCdazAdXGe71l0w+L+pEtQDpdrpuYoBfEkukfGGPnutEPxfMyfX7BgrE02QLDancO5CmePlbD+dsPqr2v8GTEaHew7twhumx7Btjry2z6Ya9JBGzXwJeJW+Aj8YHb9XzdP+zXq/Qa7v8AVLCW4nuQY1nkAwgBI7mBwxw4mg7WM+lm+f8AyFPqKP4Wf5/8hUlRotJmiiigGnCm04UEE3r1LpPrz++oZz6Q1LpHrz++iRu1KKKKjo5a7OOlhP7S/wCWrGqoZEkUc3i4e8cRVTUjs6Ss3kyfcK0r8YhWQfEbj7jVcuXg3S6y7L0jlTIFvK4J8ghkKN9SXmf3awVu7lFWdoi06gS7fEyBUlx/FtJ197V3v4StOVOrupB+bgNHNgcer2lXI9vVOW98IrhM3gnO94o7oP3mPqrL1i5PzVuVRvmXRPKqyY5twjW7FltwDCZPKPBhLfRDNbSfuU5ZHkmEvZ8XTOHCMMASmTdsPs7Qk0R9k61f0/Rrm8gSbZDbWBZYla6JVCOKLEfFiVeW2YDJDRxnyqyurWliix6PvvJnCjts4Cyz7wqgoOURlCbd3MTxAHBaimQdH7a3tUfUBJFbsqpDa4/OblGRlRQpxsMkWI8tjEkC4zmm3mur2eWCxEVnZSjfI6SbWnRye+8vAokhwQwwIpkIYYNZ88xud89xMLkSI0kks5KLIhYBnbHeVGcDfjjBMu71WqzY2st7qRiNzJB1bF55pQIzb5XLySEAiNyoy2QYJxx4MaDY0i4u+jenTX53G4nJ6uGSJk2knMkzois0DcwSoaIuSwxk1c1fp/q990esZrTU2tGeeWF1t72JjJtVCO8qO/jyUBvPHCsbWWgvZrYpAttFboI7SB0VGhjHAbVZ0ZSeZMMpU5zirF7b3p6KWiyPdsDcylt7XJG3anPdOvD5zEfbQZ+vxhjHrcCLbrNntCPuiW3mBDOHHOKNm2yEEmWXKpgAVLBrMd/Iqaysva0ZVS/Kqk6OpEgEy8Fcgjr5BkbFVFJJ4UnR5I9k+nTOkVlMwEcsZjVLWf4kgZR1MRySpYNJId3DlWXc2zWE01tPHHD2cbZY5FPVxru5MpyyxFxnacyztjIC0GzfWF3Fpqv2tLzTCoVbxQWWNDHty+RlGEPWyEMB3pQBmsc3F0HNzKpV0YyGHGNrBhMUx7GNrF78jwqzY6reabcu9u5SUsySLOww7eu6zfFJ/STHkiqsY41ogaVq/G3YaNfkhozNkW7th5VZuZjbibhgcgYjBIqowhYZDWck4YFezB/A8Ft93/2m9wqGW6CA3qptbBuQp/vLkD63tl+mrWpaa+lyta3sc1nGIyO/xKxdXjcCODbIAzEjI33AFZ80oSUyywAyqxkaHw3h1do/4htoP3GqCSFhBcpAnf6p+rGOOQjRR/5bWU/TXvvQGz7H0WtU8WG5vfnj/lrwzRLXrL6OG3xKY8IJMcGPGJW/eInb+8Wvo7R7NbLToLdTkRRhc+eBjP04z9NJWN1qH4Wf5/8ApFS1DD8LP8//AEipqy0KKTNJmqp1OFNFOFBXmOZDUukfCTj21BIcuan0f4W499Ejdq0UUVHRyGtHGtzHy2n7BW13ZoNp9WRcGsTXOGtTfu/cK1LKXfZRn2YquUby5jpBpD6rpstqoXtEZG0t6odeKE/snip9jGvKnttL0V+pjtvxxeJtRY5m226+tEquTxckDs7H1QyREjjXt+r24Yi6C7lxslUeIPjXkvTzQTbXL6jtSSKT4ZpCREdwCb38o3UBJMeqwSTwNVlzF9qVxqknXXcq3O9dq9cerVkc7ACB8GH2hGx8FPGrcA1VnfrFd3frFZZHdpYioYZ2yl0HHBIAnQd6NwJV4E09opHLssUzMN+8PD1sm4Ltk3oODOEwssf6VAsqd4VEWC+kDgBdkvWdoJ2qBiOTrgOAHJLkAjHclFFThikjSM7o6SKzu8yq6sRhXaXiquRwE2DFOuA+GrUnL6RoXUrmK9uAHkCo8TWttnKrtUM9uHI3FcSQ8OGAar6NbRNdtcXeYbXTVae4OBCYg3xSAfQ9YSAQN9u4JYbcGqOp3st/ciW52md3MsMZUKyj+rQuCBgAbraUqcepQaEG6LQOtt1zblSSYV9ETnn6FZYSf7tfaBVrtdr+S1gyCDJuJvUWPOdqZxttc55clB9/hUuNjaI7XJQT7DxuNok5+cwhk+tz7zVaefHRTTg0o2Nc3AO6UY5R+d3j7SPYPEiW4kcxJNP1kcvERyTFkf8AcaUFx/dRA+0Vb1f8/wBNi1XLR3NqBHejIhaFtvcnO4nqSyggyybpe73VBYVjwMvZZY7IoQR3xakHPzhbDj+/MBVzQ9StrGVetnVNNYGC46tkCQg4O4bT1MTBgGBzLKSKDLJVI+8qIiRoSHhYIqbsoDH6wj3cUiPpJnwz4FK7lQwKjILqwnkDLkHe4kYcwDiSdhwyFiFWtR0+XSr+W2lO17VmYsr9VtVv0u9iTGGB4zyEytnCKKpFCg27QhQRrjqCNuDmIdV4DPGOD1nbvycKK1LDpDcW8Is7kJf2e4Ew34xhvhQxPONuc8mOCqI0xmpl0WDVCJujt1IxQK/ZbrhdRHbuUgcpCokecgd4u6AgYrBIwCO4B3uEz9YgAbc+9h66q+Glf9JJtjXIFaukWM094gjjlkdZAArD0rylt21vDeX9JJ4Bgi8o2oOs/B9obTazGZITELUiR4vCNsbY4z5lFX64wfjV7RGoVABwFYfRqwngsI3u7hrqbbgysPXPifdyAzx2qK3c0WEUJ9Lcf2n+kVLmoYD6W4/tP9IqSopc0Z40lFFPWnZ4U0UrHCmgrHmasaP8Nce+oKXTZxDNPlWILeFRInVt0VAt5C3Nip/aGKfFMkwJRs4o6W5HXf8Axuf937hVnSZd1syfqmq2vD+mp/3fuFN0uTbcFfBhWnDy2cgggjIIwR51halpyKhgmANu+erdl3BcjBUjxUjgRW5SMiSxtHIu5G5io1MPCeknRo9HZXduu/F2FBbedsCL8GkjDvdWp+DnHej5NlawWzG5IE8csHpZN+I2jd/jkoCIi3LrVDQS/HVSa95v9Oa3jw4aa1HqyJ68X+49lcLc9DItJnbV9NcSQ2waW2td5SJJjyZHGWgHMsvejJxkCqy5XUd2l21roVuHjmt17VcIisjRyEcNqxkvGqgnvQ9ZFuZ8oBWACp0uRl2i2ckuwC9S5z8ZkV4GPz44m86t3okhvzaXqbJpHMoinVUaRycl1UsI5CTx328kbHxXNQf+cKu+29HD0jET4/eMNx/ik+miug0ImTRoktt7QlSNttuKc/KGSRP8I91XrnSB+IbIDtQ23Ex4RyZ4hPK2z4ez3nwwzmLSm7bGFYA965UefnPBn/GffUN02nnonYbpNPKi6nAz2Xb6sftx9mfZVRY1Kz08QhL6Yls93tkuce4TvgfREaQ2lrDJbXDM/WqfQySOwb3Rsy7gPZDEPfWPACxAsYwqj/0qsB9dvCn2yCrtrC6Ru0KrECSZ5AwQH55jdmP95Oo9lBt3r/jPQ5G3FLvRSGYEqhSE8n7zMImU8N8m6TachQa57qGDFQmwR8cd+LaJOfPLxh/F2zPLyUKDWvpFxJYXsF1bRmZY8hFwEjKEYcIFG0AjOTGrHzkHOtmPoncXl8o04h7CT0sNwGwuxuZGD63MMQSxwcyAHbQczY6XNc3IhgDBwwUsqbCpQ4UBRkKVzhUGRFnJ3SEAer9EuiCWKoZY1EiLswOUKnmg/aPifLhkksTc6O9GbawRVtUXeAFabaAFx4KBgD6AAPADjnrYYY4IhHGMKKixFnqAqhVGAKOdFFRtDAfS3Psk/wBIqaoLc+luf7X/AEipqIWkpOdKOdCz1okPdx50LTZDxxQR4qK0kMcs+PFqmqrFwml+dRFztJ/VFWbGXrJ2GMYX+dZxNXNM/wDyX+b/ADosTqxdcXOszn5v3CqsJ6qZXHgavayM6tN9H3CqOKMzu2wcj304Gq1rJvgHmOFWBUU4MVPDx5+2s260cPMbixl7NMea/EatGig43VNKtZoZLbVtMCxyevsQPE/tKEFT9Vcpdfg7sXjZNIv+pibj2cTMsQ/u3EifUor17mpU8VPgRkVSm0iwuDl7ZQ3mh21bSnkX5FanZWLxQCDdg46mNF/+OSL7hSt0c189H7WHrHEi3ErNxkPdKpj/AMz7D4n3Dx9Tbo7a/o5ZE94BqP8AJ3C4W8ZTnO4J/L/vlVtKl5I3Q/WJCM28kh81jVf8Tq5/xCrdt0D1QuHdbaJx+nu5mmdPmgFsfQ616mvR8fpL+dvmgLViPRLBCC0TTEeMrFvsoauIsuiFgXAlEmqyg5K7QIt3mV5H3uWNdhZ6NII/ztgqc+qjPD6TWsiqihUUIo8AMClotBFVECIoVRwAA4CnUlGajVlzSUUh4US0Nv8AC3P9r/pFTVXtj6W6/tT/AJVqeiFNApKBzoqVSMVGTls0pPdpBQkVUj4Sy/Oq5is9permZQCzu2FVRkk0RMzAcTVrR5RLdybQSqrgtjhnPKmWujy3BEl6difJKeP0mtmKJIYwkaBFHIAYFG4jy5rVx/Ss30fcKz5JY4z3mxXQX+kT3N280ckYDY4MD5VUudBuJ4QrRwsQMZ3kfyozMSy7fVLaBm3Sd0+VWV1uxblKfqrH1roxJZabPPcGJYwpG1JCXY/qqMcSa42O61O1jVF6Lai0a4CnrUz9NWmLmHpw1W0Pxz9VPGp2v65+qvGZvwjwWWsxaM/RnWH1CRgiQLtLsTyAGeNeqW3RXUJbWOSW3igkZQWiabcUPkSBg49lKa1af4ytflD9VL+Mbb5T7Kofklefqw/xD/tS/kle+UP8Q/7VND3cL34xtvlPso/GFt8p9lUfyTvPKH+If9qX8k70eEX8Q/7U0PdwvfjC2+U+yj8YW3yn2VRHRS98ov4n/Sj8lLzyi/iH/aqVK92+2+U+yj8YW/yn2VRPRS88o/4n/Sj8lLzyj/if9KFTwv8Ab7f5T7KO323yn2GqH5KXv9X/ABP+lNHRTUBnJRsnxk5fZQ14aP4wts46z7DR262+U+yskdD9QF20xcEFduzre6PbjFTDorenmE/iUNeE9rqEHX3YLYxNw4c+6tWDqFqP0v2VmDopfI8mI8hmyCJB5CoJeh+oSSxsOsQKclRIMN7+NDXhsHUrUc5R9VA1O0+VH1VzuraFNpWlXWo3ivHbWkTTStvBwqjJ4Z48BXJQdJtMnjSWK01l0cblIsX4ilJMy9TW9t3PCVamWRG5Op+mvO9N6SaRLq1jp8kGpxXF9KIYRNatGGbGeZPsr0WDS2gHctePmWB/nUWLk7FTaSiGSd9oLhsZ8QKb2W58IR9LirVjaNbK5cjfIcnHhRuI1W6KKKjYooooK89lBczJJKm9kBC5PAZ58KBZwLyjFFFEpTi6OaTBrP42Syj7eIzEJyMsFJyQD4VqUUUIFFFFFFFFFAUUUUBRRRQFFFFAUUUUBRRRQVNU0201jTZtPvoRNa3C7JIySAy+XD3U6OxtkQBYgoAwAKKKIhudF067uLWe4tUkltJOugY843xjI+gmr9FFFFFFFAUUUUH/2Q==" alt="Carrier mini-split outdoor unit" style="height:110px;width:auto;object-fit:contain;"></div>
+        <div style="padding:10px 12px;"><p style="font-size:11px;font-weight:600;color:var(--navy);margin-bottom:2px;">Carrier Mini-Split — Ductless Option</p><p style="font-size:10px;color:var(--text2);line-height:1.5;">Compact outdoor unit for ductless installations. Same inverter technology, smaller footprint. Ideal for single-zone additions or condos without existing ductwork.</p></div>
+      </div>
+    </div>
+    <p class="sec-head">Heat pump education</p>
+    <div id="edu-boxes"></div>
+  </div>
+  <div class="pbar">
+    <button class="bpri" onclick="showP('client')">Build Quote</button>
+    <button class="bpri2" onclick="showP('playbook')">Playbook →</button>
+  </div>
+</div>
+
+<!-- PLAYBOOK PANEL -->
+<div id="playbook-panel" class="panel">
+  <div class="hero" style="padding-bottom:1.1rem;">
+    <div class="hero-inner"><p class="eyebrow">Step-by-step HOA outreach</p><h1>HOA <em>Playbook</em></h1></div>
+  </div>
+  <div class="content">
+    <p class="sec-head">6-step outreach process</p>
+    <div class="sgrid">
+      <div class="scard" data-step="1"><div class="snum">1</div><h4>Find the board</h4><p>County records or property mgmt. BNI referrals fastest.</p></div>
+      <div class="scard" data-step="2"><div class="snum">2</div><h4>Request 10 minutes</h4><p>"Your residents can get a $3,380–$8,060 check from Xcel just for upgrading their HVAC."</p></div>
+      <div class="scard" data-step="3"><div class="snum">3</div><h4>Lead with math</h4><p>"3-ton: $14,500. Xcel: $6,750. IRA: $2,000. Net: under $6,000 — with AC included."</p></div>
+      <div class="scard" data-step="4"><div class="snum">4</div><h4>Group pricing</h4><p>10+ units = 12% off. 25+ = 18% off. Residents talk to neighbors.</p></div>
+      <div class="scard" data-step="5"><div class="snum">5</div><h4>Leave flyers + 30-day clock</h4><p>One-pager in every mailbox. Group pricing expires in 30 days.</p></div>
+      <div class="scard" data-step="6"><div class="snum">6</div><h4>We handle all paperwork</h4><p>Sparks files every Xcel rebate. This closes HOA deals.</p></div>
+    </div>
+    <p class="sec-head">Group pricing tiers</p>
+    <div class="gtbl">
+      <div class="ghdr">HOA Commitment Discount — 30-Day Lock</div>
+      <div class="grow"><div><div class="gu">10–24 units</div><div class="gn">Locked 30 days from presentation</div></div><div class="gd">12% off</div></div>
+      <div class="grow"><div><div class="gu">25–49 units</div><div class="gn">Coordinate with HOA manager</div></div><div class="gd">18% off</div></div>
+      <div class="grow"><div><div class="gu">50+ units</div><div class="gn">Contact Tim for custom package</div></div><div class="gd">Call Tim</div></div>
+    </div>
+    <p class="sec-head">Say these out loud</p>
+    <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:14px 18px;">
+      <ul class="blist">
+        <li><strong>No commissioned salespeople.</strong> Paid to install right, not to upsell.</li>
+        <li><strong>Factory-direct pricing.</strong> We buy Carrier direct — no distributor markup.</li>
+        <li><strong>Price-beat guarantee.</strong> Bring us a written quote — we'll beat it.</li>
+        <li><strong>We handle the Xcel paperwork.</strong> Sign at install. We submit. You get the check.</li>
+        <li><strong>One-day installation.</strong> Existing ductwork stays. In and out in one visit.</li>
+        <li><strong>Cold-climate rated to -23°F.</strong> Furnace is just backup.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="pbar">
+    <button class="bpri" onclick="showP('flyer')">Print Flyer</button>
+    <button class="bpri2" onclick="showP('calc')">← Calculator</button>
+  </div>
+</div>
+
+<!-- FLYER PANEL -->
+<div id="flyer-panel" class="panel">
+  <div style="background:#444;padding:9px 1.25rem;display:flex;align-items:center;gap:9px;">
+    <button class="bpri" onclick="window.print()">🖨 Print / Save PDF</button>
+    <button class="bpri2" style="color:#ccc;border-color:#666;" onclick="showP('calc')">← Back</button>
+    <span style="font-size:9px;color:#bbb;">Chrome → Print → Save as PDF → Letter, color on</span>
+  </div>
+  <div class="fly-wrap">
+  <div class="flyer">
+    <div class="fl-hdr">
+      <div><div class="fl-logo">SPARKS <span>HEATING & AIR</span></div><div style="font-size:8px;color:rgba(255,255,255,0.55);margin-top:1px;">Denver's Factory-Direct HVAC Company</div></div>
+      <div class="fl-tag">Authorized Carrier Dealer | No Commissioned Salespeople<br>Price-Beat Guarantee | help@sparks-hvac.com</div>
+    </div>
+    <div class="fl-hero">
+      <h1>Add a Heat Pump. <span>Keep Your Furnace.</span><br>Get a Check from Xcel.</h1>
+      <p>Carrier inverter heat pump handles heating &amp; cooling all year. Existing furnace stays as backup. Xcel sends your rebate check directly ~10 weeks after install. Sparks handles all paperwork.</p>
+    </div>
+    <div class="fl-stats">
+      <div class="fl-stat"><div class="fl-sn">$3,380–$8,060</div><div class="fl-sl">Xcel rebate — paid direct to you</div></div>
+      <div class="fl-stat"><div class="fl-sn">Up to $2,000</div><div class="fl-sl">Federal IRA 25C tax credit</div></div>
+      <div class="fl-stat"><div class="fl-sn">Rated to -23°F</div><div class="fl-sl">Carrier 37MUHAQ cold climate</div></div>
+    </div>
+    <div class="fl-body">
+      <div class="fl-sec" style="margin-top:2px;">Carrier 37MUHAQ Cold Climate Heat Pump</div>
+      <div class="fl-prow">
+        <div class="fl-pi"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAcFBQYFBAcGBgYIBwcICxILCwoKCxYPEA0SGhYbGhkWGRgcICgiHB4mHhgZIzAkJiorLS4tGyIyNTEsNSgsLSz/2wBDAQcICAsJCxULCxUsHRkdLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCz/wAARCAC0AJsDASIAAhEBAxEB/8QAHAAAAQQDAQAAAAAAAAAAAAAABQADBAYBAgcI/8QAVhAAAQIEAgQHCQwGBwcFAQAAAQIDAAQFERJRExQhMQYVIkFxkZIHIzJSYWSBsdEWJDM0QmJjgqGywdIXU1STs8JDRHJzg6K0JaOkw+Hw8TVVdJTT4v/EABkBAQEBAQEBAAAAAAAAAAAAAAABAgMEBf/EACMRAQEAAgEEAgMBAQAAAAAAAAABAhExAxITUSEyBGHwQbH/2gAMAwEAAhEDEQA/APSMKFAur1xilowAaWYI5LYO7ynKCW65EyQBckCIiaxTVPFlNQlS6NhQHk4uq8cs4YVaddmpF6dmVJkpjHKKtyUNuLtgUTzA2KPrGBCGZdsYdWSjDsKcFsJyjpMNuN62uI7ppW7Xxpt0xgvtDe4gfWEcOJlx8gdUbtrlR4TTZ6UiL40836dsM1Lje+2PriGX6pJSyAtyZbAJtyTiPUI44ZmRGwyjHpAjKJyTbXpGUJYXaxLLhRfptvh418v6dbHCGmH+sH0tq9kYPCGmD+sHsK9kcuFceCLCdmLDcAtJ9aY1NdeI2z8z1o/LE8dTy11P3RU2/wAMo/4avZGW6/TnHAjT4L860lI6zHLE11aR8enLnJxI9Qhp2oy0wq8xp5i/M66pY6r2h46eWuv8a0/9vlv3qfbGeNJD9tlv3qfbHHhPSI3SjZ/wxG4n5O/xNv8AdiL418tde4zkP22X/ep9sRpzhHRqegLmqnKtA7ruAk+gRyvX5E+FKND6iY3RUpBsjvTCL7BfCLw8aeWuqU6vUqrIxyFRlpkXw97cBN99rb7wQjjiG0VGvSEpJshqaeW3MuPNCxZYbWFYlHNSgEpGRVnHUpao8rA8dnMrKMZTTpjnvkRhQgQRcbRCjLoqvC3hciiPN0+XIM48nGSdzad1+k7eqKm1Ppec0jrmNajclRuSYrXdNmJg8MJ5xxvQrbCEJTpL3SLWVs3XBvbmgVI1OZbaCBcJNgfLHfHGaeHPqby+XRJnU6hTnpKblUzMs+nA42Ta4/754FjgnSsWNDlVSQQQFvtuhNtgsVpJ2dMA2avMpUOSCkcx2fbEwVKdSLErSciYvZpJmLDg5JD+nnCMlNMH7QkRg8HZQ7NPNp6ENQL41nT8tfXGDVJ/mec7Zh232vdBv3OSCh8YcB8rI/NDauCsmrdUHEDyMD2wH4yqH65ztmFxlURudc7Zi6vs74MDglKf+5zPoZR7IwrgpLothnZtfQ02PWIEGrVO1tMu39owhValY2dOzadphq+174MDgyxzuzh+q2I3HBmWvcuTgHlQk/jATjaokfCn7YwanUP1n2RdX2d8WJHB2TTs98q/w0D8DG44K01asbnGKTuskpCeoItFaFRqP6z7IRqVR/W/5Ymr7O+Lang5SkABPGYt4ruH1Jhe5ihLN3JSovX8ace/BQipcY1Ajwx2BGRPzx3rHYETsvs756XenSchQW3EUyjtygdN1qxKKnLbipSrk+kxq89MOOl1x1aUpO5tSk4R6LfbeKaifnQkYHgARfkm4NxeNFTU1gIU8SN9id8Z7P8ATvXqR4WtU90NPPrdbxWOMgkA8+wDdF2BBFwdhjz6+sqnEY3BtBGzpEd3penNKlTNhtL+jTjDZJTe3NfbGc8dO3Syt+K4j3T6gwrhxUpZaVBbaGxiIuDdCT6IASzkqLAvNjbblC3Pb1mCXdKF+6hVgdxDP8JMDW0IxN3T8sffTHScPJn96ntqkHNgmmSlVk/C7728vzk9oZxKbdpyGf8A1BmwFyozPNa974stvRAdLDXFSjgGwNnd9Ex7B1RFXKsYlp0abFCxa3Ngnx6oWtSLNpqelWEzzV72IMyb3uRbws0kdIMITFKIB1+XN93vnf4PzvnJ7QzgGqWa46aVgTczCDu86lj/ADGBWrNCgps2nZLC2zzP/wDkdUTa6W5UxSQMRn5cC1/jJyUfGySrsnIxuHqSFYFT0vjuBYzBve4Ft+akj0jMRXnpdnjF5OBNjMqG7zmbH8xjEyw2NXXhF9WaV6cEifwENmlhE5RcOIVCUw4cV9NfZhxX37sO3oByMYXMUcvpOuymkSSkDSC97lNrdKSOkZxXGZZohScAsGnE+jRT49UOtst8asckfG0n/i5Y/iYbNDwqNHUAdekjcXBxpsRyTfqWg/WEZFQo53TkmT0i+5R/kX2TlFP0DYpAskfEx/ox+UQYk2GzwiAwi2ukf8VN+0w2aGRP0Uqwidk73w2ChvuketaR9YZiNTVKGGy5xhJhATixXFrYSq+7xQT0A5GKuGUAbEjYhJ/3cgfwh5Uu2afMDCPg1D/JUB6om10sqalRw7g16VxYsOHZe+Iptu34hbptmLoVehFAUKnJ4VC4UCLWsk33ZLQehQMVxhpHGbJsNs0n/Vyh/EwMLSBRCAN0sf8ARD2CHcaXVFR4OyzDitelkNtklZCTZPhnbs+jc7JHNDL3CfgxKrKVVJOkBwWQysm91C27NKuqAs2yg0+vCw8Jf+onfbFXnmErmwvElPfsW3+077YlyqyRYKvw+obCg5Jyk3OOtKvy0hpJI27zc/ZHpakTCpqhyEwpISp2XbWQNwJSDHiufQkNOWWCS6o2A8kezuD4twZpf/xGvuCM5fMdunNVxPular+kmp3W428lLN7pxIV3tNrW2iA7BQtbXf2RhVchSrfLTnBfukgHun1PZ8ln+GmBCWkKWzdIPfB99Edpw8mX3qQ3KuuSJZQuXK1BAFn022NspzzB6vKLtuUqdUFLTq55C/6wjnRNW5/pm+1DKpZkUlatGm6cChs+iYP8o6oYmJGVOlRoUYSlxNsI3YZ5PqAHoEZrcF10yaNRQ7eWCEvJUSZhA2B9lV7X8VlZ9FoHihTqqWJfHJhwshFtbRv1cN5+MsD/AMi+z0qxxw0rRIuX2ydg/aJU/wAyus5wK1RlNB2NJBTKjmH7GfyJ6hEUcdpj5mnHtPI4S8p0HW0eDpplzPxVJPXkbZfpcw4tlvWJEFDTbJvNI3gSqD9ra+oZiITsowak6nRJtrSha3NrU0PUoxial2gJZejTi1Ro3tz4JI+sCAlNU15KFL1qnm7Sv64jnamT/wA9G3Ik7hDqaY4motrM5TwlEwFH30m9hMNq3Z2ZVsz2b72gysowXcOiThCFp3c2jnk+q0ZaYa40YOBPxpJ3edyx/mPXAZFDmFU9DOu0zHq4b+OJtfQNt9V19Vjzi8+XkltVUTZnqcUawXrCaTe2lmXPUpPUrxTAAy7Qo6bITsk8vNB+QdUF5KXZ90YGBNhOkbvOpsepRgrAo7hUEmoU0E4UW1ob/eiPW0rrT4wjPF6hIOjjGmcpom+tpsLtzR35d/RtyCjuED0stgbEAWSDu+ZIH1iHjLNcVTYwJtoind8yfHqgJyKWUVBtRqdMsiYCyNZF7CZaVutvswoWzsIhJoSl04MmsUcFTOC+tgjbLtN5Zrv0EHnEZl22+NWThFzNpO7zuVP4mBamW00SwSNktl5kj8oiEWB6noMhU71qkIExiViMySEguTbm2wyWOyvxYETNBpYmFl/hXTWglw7G23HTfG7s2Dp7J9MyZab4ur/JFsSx/wATO+2K3OEB1W7a5tvzcp4xlWtQa4K0tJU49Uqy4FFeiDQlWiciTdVth3R6xormloFPcDaGwuWbVgRuTdI2DyR464QgBKbKJ2G48tzHsKg7ODdMHmrX3BDLh16fLi3dJMv+kepXUtt0IauSMSV97T6Un7IDMkuONYFNHCoX74B8pOfRBfukC/dMqX9ln+GmA4aa0jKSgEld93z0R2nDyZfenxIzbtOUymXKlqCBYLT+rZSefMK7JjV2k1NWNSZJw3Su3KTzpmyOf6VvtiI6pRnihxQQApOjUDkdEyfWkRDekZfvjeAYShxNvJgnk+pKeyMozWoOOUmorqTbglFYEvIJUVpAsHpck78mlnoED/c/VlUjQ6kQ4WAjCXEb9WwW3+Mu3XGrsozxs2ooG19BP/2JU/zr7RzgaZNpNC2N8pMuLHn+Jn8W09QiND7lHqRnVvCXTgL6nAdKjwdPMOX3+KpB+sPLZP0Wou6FAYRyGG2jd5A2hMqk8+bbnZPkgc7Iy5qTqNEjDrKk2tza1Mpt1KI6IU5KshMqvRpxGUZVe3PgkjfpuICexSai2ouFlvahRtp295bmrDfm832o3RRp9M+0soZCUvhROsI3CYaVff4rKj6IDtycuMaNEmwbWm1ubRzyfUB1DKNQJZNUaJSi+sgm4H7VLn+ZXWYCd7n6oqnJZ0TOkMuG7ay34Wrpbtv8ZVvR0XIS9MnmquJpSWNFrBevrDfg6aZcz8VaD6fIbVO0vxUiyU3EmNoHmqfxQnqg1IS0uvhEhIbRbXLWtstrM2PUoiAkpoNRxAFMsDYIPvlvfaURnm052fKI2NIqHFzyLS2JbRt76b36OaOeb7fXkLwJTLMg3CE3CQrdz4ZE+sRuuTY4sfGiRbRKT4I3aOfT6gOqIoq3RJ5uotrKpTCiYCydab8ETLSs/FZUfs33tD9zNTXTgyVyIWWdHtnW95l228/GUeryi7MvLs8bsq0abmbSd3nksf5j1wNVLNIo2xtItL5eaN/lHVAixvUebVIVRJmaajWcSkqXOtgAFybc2m+zY4j/ADeKYDzXBiXC3DNcJKNL2cVazxcI5bvMkf8AdjlEp6Wa4qr1m02uobvOJ4fiYrU+pKXHE7BidVzeV+JVh6sSvBaljTOTE3WHNq9Ey3q7KzvOJauVY89hePVtIc0tDkHNGhGOXbVhQLJF0jYPJHjzhC+h+VQlBWotlaFKKbC45hnHsCibOD9OHmrX3BEy4dely4z3SVMfpEqFsSHQhm5O1K+9jqMA2kLeeZUgJVgVtsseOj2Qa7owB7pNR/sM/wAMQB0CFTDBKQRex7aI7TiPHn96lCSnVUpxoSbxWoIAATfc00n13HoOUR3aXUypak06aIwrOxs84nCP4iO0IbLKUUtTiVKSpIQoEKI26JhXrF/SYiusnE42HngkpcTscVzJnUjnyQjsjKM1uDC6XUl1JpaZCZKUvIJVg2WD0sSeptZ6BEDiKsLo2iFLmtIWAnDg231VSbdpYHTfIxs+1/tRolxyynUEjGbG78sTz/SrH1jA0tqFDCg69jTLghWkVe+qE+ttJ6REaHHKPVjPrdFOmCnWFLvhG7WH137JSfrJzh9rg3U6lNykqZdUskSqG1uuDkoKWpYHdv2trHSkwHdlUGoOt3Xg1hSAMRth1iZRbowqt0AQ4H5qmTUvOyLy2pkSqFYvCBKmpMquDvuSr0kmBF6f4KU2j0qZmWKeuqzbaCUodWeWbubLDZudX6DFHfrCkzA79IyvK+DRTxdO0bdozAzOwRYJDukOqu1UaUtKwlR0kqsKTsDp8FViNjKuc80JzhxRHJlIdRNqcKsACpQKN8QTv6VDrj6P4P5XS/Hl8vTmX9+5YuU3xdI1Ak5avF+Xn6RKvS6W7Jm2mCxckYcFha/J5xEqa4KcXz7M/T1uOIS+lx1pagSAFOLJB5+U5uiM/wB0unNS5XKyE/NDBpE40paTbAF5k+CQd0QFV2pV+otSs2huXlkvpSWGiSFcuYaUFKPhA4AbWAjyfkdXHq9W54Y9s9T+n/IvxJqm26DVyReRX4IT4ScpROf0bnYMOmiVcyDqNQcK1NmwxJuTo5vZvzebHSqA7TCQEq23wpXe534ZFV+sk+k5w6ZNrimZGHYGikehqdT6kp7IyjiyLN0Gqt1Jta5NQQmYCyrGnwRMsrvv8VpR6ohjgrXV08M6gUrLWCynUCxLDTefjFQ+qYYl2G1VholIIVNpv5ffjH/6K7RzgaZdtFHCgnalkEHn+Ksn1oB9ERYsrlCqvF1UbLLCVTNyjHNNpBu5NubTi2bHW+15DAKc4JzAdWqZq9FlEhxZu5OpURte5k3PP9hyMOTcmwKVWhokWSpQHJGyzlQT6tkApttIfesEi63Tu8sxEWCVelOD9JkWXpqZcq6krWtDMskttLVbcpattt17C8eoqS4p6iyLqkoSVy7aiEiwF0jcMo8lcLlJ4vaSkk2cdvHrOi7KBTx5s39wRMuHTpOM90hTX6Q5+wKHAhm5O1KuQOo/ZANtLrjjWBsrsobUEH5aYN90ax7o9Q/u2f4YgBoUFxo2+UPvpjtOI8mf3rYy00aSpvVJjGUpFtEq/wACyPXs9ByMR3ZSc0q1anMkWcN9CrKdOXzk9oZw6jSopS3ETDyFJwKBDhH9E0rPMHrOcR3VzQU42J+bAwrSO/q2WE4kc/0bfYEZrcTnJOcXUmSmSmSA6i50SrbHpW/N8xXZMDzTqiqiFsU6bK1S4GHQqvfVVC27NYHSYlOvTXGTQ12awqdRdOmVaxelrjfk84OhVoHmYnU0XSifm9ImXCsWnVe+qqVff4zaT09JiNCTlPqPGLjgp83h1lSr6FW7WZhV92Vj6RmIzMUupOoZSmnTRIl22z3o7w3KJI60q7KsjEZwvGoOs61M4BMKbA0yvB1iYRbf4pA+qMhGJlT6dA4JmYxKl2nD31XhYJNZO/MqP1lZmAkNUqopcLiqZN2wLPwJ50Th/wCYgfWAjCKDUuMmlmmTOFMwklWjNgNYYN+iyFHoF4jMtuElBffIDa07XVczc4nP6NvsjKNm0qVUmcTzpCpoAguKsQZljZvydWOhRghr3PVY0xLaaTN49VCLaI3vqyU26zbpByMFZWl1JqtadVNmg3rJcxaI7tPNLv1KSfrJzEA1F1FMS4Jl8KEqFX0qr3EslV9/jIB6YJSrJVWwyXXS2Jkt4dIq2HTzaLb/ABbD0DKCsoolX5I4rm/BSn4M+LJp/kX2VZQ4aVVuLX0cVzhWto2TojcnRzht03cQOlQEDmy7cKL7xIwruXFb7SSs81L7RzMbONKFJmO/PXDJAOkVss1ODP6NHZGUASZotXbqjS1UyaCEzIUVaPZYTTKr9GFtR6B5REEcHa85TQ0KPOYyyEWLdturtI+8SPqnIwmEldXbCnHCFTQBBWbWM20Lb8nVjoUYG98RSkr0zpUGAq5cVe4lmVX3+MgHpiLB9/g/XHabU2xS3wqYKijEUpvdc4rnP0rfbECZjgbVMTi5l+mySMbhxTE62nYVP2NgSdyknryNtp2Vb4krgtcIxBNzewC59Oz0ADoAygFOMtiaeslAu69zfOmfaYiivCNiiU2UZmJ6c42dS4tSJaVBDSzvstw/JvvsNseoKW6p2jyTigkKWw2ohIsLlI3CPI3DBaVSbCU7bOOi8euKSLUSRGUu390RMuHTpOL90tSP0hToCcLgQyCb7FDANpyIgE2l1am8LS1AKG1IxDw05Qc7o4B7o1Qv+rZ+4IAaIaRsglN1cxt8pMdZw8mf3rBS6KQtBZdCylIsWzf4FoZZkCIz2k0jqtG5YBxV8B3e/j6iOsZxK1idZpK3m52YStGjUCHD+rbUR137Rzhh6pVdIebTVpwbFhJDm0WE2B/BbPSnpiVuHHEOqqjISy6bOtg2Qf18oDzfMV2TlA8szKqGUplnypUuAAGlX+KLGWa0j0iCsxUaomqNtiqTYbcWgFIdNrF6XBHU8sdBGQgdxxWeKEvcbzulEuFFWlO1WrFd+02D6TmYjSS4xNcZOrErMYdZUq+iVa2szCr7shf/AMxmZlJxxLCEScySJZps2aVv0cmm27MEeg5GNnZ2o6+4zxnOhAfLYGnV4Onfbz8XCPqpyjWbn6i2phYqM2Mcs04oaZXhFMoon0lbnbOcBlmVnEqW4ZKawlCz8CrxJ05fPT2hnG7UhPipMkyMzYTKSTolWA1lg33ZIUegGGJeZqCyEKqM4bNLG19XM3NgHfv702elIMZRNzyqiygz80U60EkaZVikzLItv8V1Y6D5BBDCqdUVUtCBT5vEZQJtoVXvqyU23ZrA6eiCUrLTjdc0ypKZDetFeIsqtbTzar7srH0jMQKE/Uk05Loqc5jEsHL6dXhashd9/jJv6TmYJyrs4utCXVPzZbEyW8OnV4OmmkW3+KlA+qMoKit06oYgOL5raEp+BVlJJyzSrsnIxlcpUDTH06hNlSmiQNAq571OHL56e0M4ZTP1ILH+0pslKkq2vK8zUef6RztmN1zVQFHmliozgWlm6VadVwdDNbd+bTZ6UiAlMU6opqrRNPmgkTQJOhVa2tsm+7JtR6BeB4pFWcpqWxS53EWcNtAreZZlOWZt6DkYktTc85WEoVUJsocmAkp0yrWM22m2/wAVxQ6D5BEJuo1LitDqqnOFegC7l9V76uwu+/xgT9Y5mIsFXqLWZilVZpqkTq1zBVgGhIxXcnVDf5HEdsZwOmOBlcVMOOPyrUo3pHDimZhtsWKn7HaclpPph2f06qFWcU1MK0QUEXeVybLnUbNvioQPqjIRW5lIcn3is4iXlbVbdukmPbEUV4SsUelssTU7NoqT7alLblJa5bWrYeW4fk7rgb90epac4t2lyjiyMa2UKNhYXKRzR5A4XlKkMBG0YnBfqj1/ThhpcoCLEMoH+URMuI6dJxbukIc/SHOqASUlpkZW5EAAlwqbu05YHeE4h4Q5xFs7oaR7tZwnnQ19yKktOB1BQpSCVbcJt8oR1x4eTL70wpwGjOoNwS2nYRY/Ate0dcQnXk4sVwQoOK9Hv8+qCuvT7NLcmETr2NAQoEm/yG1EbfLfrMMOVisIC0JqLgslaQcCLiwm0jm+hQfQczErcNzDgNTlrbTpm0/7+T9h6jAzGTRF2Cj73A2A/sa/zDrEHnazV0VFpAqLobW4i6QEjYXpcEbsn1jqyiEa/XBSg8KtMaRLAWTydp1dS77vGbv6TnEaYcWeNHFYVW1pRvhP7VMH1JPVGs6HFtS4S24Tq7Tdgk79HJC3TeJy6rV9fcYFWmwgPqaHL5tO+3l4oR2QY1mqzWGiytNVmhjl23iMezEUSqz1lbnoWRARJcrS46otuBIQu5wmw73PH1KHWM42Sh1NXRdl0YJhJPIOz31L7+yrqOUSGKpV3FaI1ec+DWL6TbcImwD1stnpT5TGW6vV11FpCqpNlCpkIKdIbYdYZTbsuqHRbIQAjRvmkNp0D11SgFtGr9lSMs1jrEFZVa0V0uFtaUa0VYiggW082q9+gXiOK5WhT0vccThXqwcvpN6tAhd+0kn6xzghK1CqOVcSyqrOFvWC1bSnwdLNN+pDfZBgBKWntME6B2+BNxozlIjLMHqMbgOqorw0Lt1sFQ5B2jQzpyyUnrGcPorta0gJq02bFKrY9n9UUf4rg6FERsur1oUqZcFYnQttk2VpTcHRTW3puy2ekeUwUyw2+KswdA9YzosdGraBONHLJCuo5RAbl5lVMSgSr5JYCQNErfqrCcs1AQaarVYcqiG1VacwKmQgp0p8EzTaLdl0jotkIgo4QVwU5LprM8VhkLuXjtOrsufexH6xziEPPSs7M0uqssyUy4t4rwJSyolV3J47NmSk9YzEDzwO4RTT5XxU8w2Xlr0kxZpNsb1tqiPGT1iClQqNVFHqp42nrsYkoOsKBAC5xGeTbfYB3iKy++/NT7oefcdJdUO+LKrcuYz6YiiXCSn0yiy8vMVCdTPziMSmZWVOJsrsLFxzdhBANhv3R6mksRkJcqViUWk3OZsI8g8KCgokkpN+Uofdj2BLJKZRlJFiEJH2RMuI6dFx3uirA4azY2A4Gt52Hk/ZFVUpSXEYml23Xw3FyRbaNkWbuj7eHU4Po2vuxVkY0OJLTi2778Jtzx1x4eTL70wt9s0F5OIYlIRbb9E37R1xDfeSFrOIf0h3+WfMEjU6g1KhwTIWQkK742lV+Q0rnGd/+wIafrFUbDiEuy3gLSCZVveEzQyzaHaUNxiVuGH3kqqjFlA2dbTv59NJD8IHKfTxGeUNssOfzRz8w64sCq3VBUUIS+0lCnkjZLovYvMDfbfZ47c0pO/fD90VZRSw9rTWNLIX8XbtfV8e62bfUbcwtGjS5hHGrhxi2tKO/wA6mD/KeqNZ11K0MBJuRKNINs9FJD8RBFys1cTjjInRYPKaB0Ld7aZ9vLfYJ9IOZunOEFZQpC0z5ALaHSNEjeUyqyN30qx0WyEAPl5hKHS4pVkhtxV+a2CfPqMZaURVmRY/Gk83nUsP5T1GJyK7WylSVVJfJaXt0aN4bmrHdmwg9ecOJr9aXPttmpuhCpgIICU7jMNpy8V49QPNAV8u3pKBnKD/AEqfzjrEFZOZQmvhZUAnWyq/NbTzh9QJhDhNXhIoeNTWV6uHDyEWJ0DbmXjBXoPRaY3W60qfUwam7hS6pvwUXsHJpGWTaD0jymCgaVErAAJvhFreSQHrhxb44lmh47JI/czqvUR1wQb4S10lCjU3NuFZGFPOZRRG76ZwdWQjKuENeTS3nBVXtIlq4OFG8MzJyzZQevOIITC8NXbBSdk4OY/tjP5D1GBqHCqlpSASTL23HfqrA9ah1xZUcIK4uppaNUewKmdHayfB1lKMvFct6AYhNcK+EOoIeNWdK9EHPBRv0DDmWZV6FdFgam1qepFXQ2hbinVLwhCConvk+rm8nrEQWeCfCGcm1KapE0G9MolbiMCQNI9zqsOcdYgxO8I6+mkTKxWZtCkFxKVJUEkWM4nmH0LZ6U35zFdnqjOT0+ROT0zMJDygA66pQtjfG6+QA9AyiKnVyUpdA1aaqU43UJ5pSixJSxxtlfJsXHN2EGxwjadnNHqiWKlSjJUoqUUJJOZtHi+vzKJh+Waa2hBI2eUiPaLCSmWaBG0IA+yJlw6dJxTugOtzvDSedlXEuFrCysX2YkpFxfMExVS6WnGw4hTZ3HEnZvtv3f8AkR1vh5wNmp+c42pjQeWUBL7A8Jdtyk5m2wjfsFo54hOBxTalOMuJNlIUm9j5dxHVHTH5jzdTGzK7V559s04YVpN2c/omvbDE0+nSKN/1h3+Wei4NyrThGJMm5/aAGXjD5o6hlDyaZJEWVKyG0EbQjdYj1KV2jnCrKpin08ZM8ofDo5/ppOIK5hHEiuUPi+fmjntjo4pspixaCQxXxXsi973v17emEKZJBITq9PCQLWwotawGWQA9ERrajOTKONHDiHxpR3+dP+yG5iYRgRyh8A2N/wBFJRf9Qkje7dP2+RHl8nzldo5xhDEkt0gMyiVDbdSEgGxG42zSnqGQgbUFM0jvxxp+CcO/5k8YcbmW+M2uWn4ynn86lvZF91CTKcIRT7WtayN1iLbsiR0ExtqkqFYveGK978m973yzJMBzAzTfFKRjTtlBz+ap9ogk1NtisOnGn4ws7/p5wxfhJSgAsJAW2bAnyeT5qeoZRhcpLJTcIk1X2WSlJO24y+crrOZgrmrUyiyBjT4CBv8AmyAhxU23xQ+cafgjz/QzvtjpDcswtIWBKJJ27UgEG4OWYHUIzqcsBh942ta2EbrW8XLZA2521NNirNctPxwc/njPsMDG5tvixAxp+LZ+asj8RHWDKsXvikr772GZPi5k9ZjXVZf5KpLZkno+b81PUMhDRtzGfnGzRphIWklTjxsD8+oGBCqVWqpPji+mTT40yyVBshI747vUbDnjs7aG2zyHJdGEbMLZ/BPlhl6bSPhHnXDzADD9pJP2Q0d2lB4Odzh6VqDU/Xn21rbWHESrSsYuNoK1brC17Drj1M2cTSDe90gxzGg8E6hWZht2aYVJ0+4UrFcLdGQvtsczbyCOoBIAAA2DZGc9O3Sl+bWYhT9Hp1THv2SYmDzFaASPTvhQo5u1m+QlzgJQlG7bDrP926q3UbxDd4CU1DpSianUpVa6cabG31YUKFtY7Zvgk8Bqbf4eb7Sfyw+OAVKI2uzfbHshQoW07Z6L9H9J/Wzf7xP5Yz7gKT+tm/3g9kKFGd07Z6Z9wVJH9JN/vB7IR4BUgqBK5u43d9/6QoUN07Z6b+4elWtjmrf3n/SM+4ek+NM/vYUKG6vbGyeBdKSLAzNv72Me4ij3uUvk+V0woUWWr2xk8CqPa2B4f4pjX3DUfFiGsp2WNn1AEeXqhQoWnbPR1PA6j4sS2XHOblOq/AxPk6LTZAhUrIsNKHyggYuvfChRdkxnpOhQoUGn/9k=" alt="Carrier condenser"></div>
+        <div class="fl-pi"><img src="data:image/jpeg;base64,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" alt="Carrier mini-split"></div>
+        <div class="fl-pd"><strong>Carrier 37MUHAQ Inverter Series</strong>Cold climate rated to -23°F. Variable-speed inverter — near-silent, ultra-efficient. Uses existing furnace and ductwork. Heats AND cools. ENERGY STAR Certified. Xcel rebate eligible.</div>
+      </div>
+      <div class="fl-sec">Sparks Pricing — All Sizes</div>
+      <table class="fl-tbl">
+        <thead><tr><th>Option</th><th>Size</th><th>Sparks Price</th><th>Xcel Rebate</th><th>Net After Rebate*</th></tr></thead>
+        <tbody>
+          <tr><td><div class="fl-tn">Keep Existing Furnace</div><div class="fl-ts">HP only</div></td><td><div class="fl-tn">1.5–2.5 ton</div><div class="fl-ts">Up to 1,800 sqft</div></td><td class="fl-tp">$13,000</td><td class="fl-tx">$3,380–$6,000</td><td class="fl-tt">~$5,000–$7,620</td></tr>
+          <tr><td><div class="fl-tn">Keep Existing Furnace</div><div class="fl-ts">HP only</div></td><td><div class="fl-tn">3–5 ton</div><div class="fl-ts">1,800–3,500+ sqft</div></td><td class="fl-tp">$14,500–$18,500</td><td class="fl-tx">$6,750–$8,060</td><td class="fl-tt">~$4,440–$9,750</td></tr>
+          <tr><td><div class="fl-tn">Dual Fuel — New Furnace</div><div class="fl-ts">HP + new Payne</div></td><td><div class="fl-tn">1.5–2.5 ton</div><div class="fl-ts">Up to 1,800 sqft</div></td><td class="fl-tp">$14,500</td><td class="fl-tx">$3,380–$6,000</td><td class="fl-tt">~$6,500–$9,120</td></tr>
+          <tr><td><div class="fl-tn">Dual Fuel — New Furnace</div><div class="fl-ts">HP + new Payne</div></td><td><div class="fl-tn">3–5 ton</div><div class="fl-ts">1,800–3,500+ sqft</div></td><td class="fl-tp">$16,000–$20,000</td><td class="fl-tx">$6,750–$8,060</td><td class="fl-tt">~$5,940–$11,250</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:7px;color:#888;font-style:italic;margin-bottom:9px;">* Net after Xcel rebate only. Add up to $2,000 federal IRA 25C credit.</p>
+      <div class="fl-2col">
+        <div class="fl-why">
+          <div class="fl-sec">Why Sparks?</div>
+          <h4><span>✓</span> Factory-direct pricing</h4><p>Buy Carrier direct — no markup.</p>
+          <h4><span>✓</span> No commissioned salespeople</h4><p>Paid to install right, not to upsell.</p>
+          <h4><span>✓</span> We handle Xcel rebate paperwork</h4><p>Sign at install. We submit. You get the check.</p>
+          <h4><span>✓</span> Price-beat guarantee</h4><p>Show us a lower quote — we'll beat it.</p>
+          <h4><span>✓</span> One-day installation</h4><p>Existing ductwork stays.</p>
+        </div>
+        <div>
+          <div class="fl-sec">HOA Group Pricing</div>
+          <p style="font-size:8px;color:#5f5e5a;margin-bottom:6px;line-height:1.5;">Units committing together save more. <strong>Locks 30 days.</strong></p>
+          <div class="fl-grp">
+            <table><thead><tr><th>Units</th><th>Discount</th></tr></thead>
+            <tbody>
+              <tr><td>10–24</td><td><span class="fl-disc">12% off</span></td></tr>
+              <tr><td>25–49</td><td><span class="fl-disc">18% off</span></td></tr>
+              <tr><td>50+</td><td><span class="fl-disc">Call us</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="fl-ftr">
+      <div><div class="fl-fc">Free instant estimate</div><div class="fl-fu">sparksfreequote.netlify.app</div></div>
+      <div class="fl-fco"><strong>help@sparks-hvac.com</strong><br>Sparks Heating & Air, LLC — Denver, CO<br>Authorized Carrier Dealer</div>
+    </div>
+  </div>
+  </div>
+  <div class="pbar">
+    <button class="bpri" onclick="window.print()">🖨 Print / Save PDF</button>
+    <button class="bpri2" onclick="showP('client')">← Quote</button>
+    <span class="pnote">Chrome → Print → Save as PDF → Letter, color on</span>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ── ALL PRICING DATA ──────────────────────────────────────────────────────────
+// ── FURNACE PRICING ───────────────────────────────────────────────────────────
+const FP={
+  "80":{
+    sm:{model:"PG80MSUA48060B",btu:'60K BTU 17.5"',afue:"80% AFUE",price:4650},
+    lg:{model:"PG80MSUA60080C",btu:'80K BTU 21"',  afue:"80% AFUE",price:4850}
+  },
+  "96":{
+    sm:  {model:"PG96MSAA48060B",btu:'60K BTU 17.5"', afue:"96% AFUE",price:4850},
+    md:  {model:"PG96MSAA48080B",btu:'80K BTU 17.5"', afue:"96% AFUE",price:4850},
+    lg:  {model:"PG96MSAA60100C",btu:'100K BTU 21"',  afue:"96% AFUE",price:5350},
+    lg24:{model:"PG96MSAA66120D",btu:'120K BTU 24.5"',afue:"96% AFUE",price:5850},
+    xl:  {model:"PG96MSAA66120D",btu:'120K BTU 24.5"',afue:"96% AFUE",price:5850}
+  }
+};
+const FCB={
+  "80":{
+    sm:  {model:"58SB0B070M14--12",  btu:'70K BTU 14"', afue:"80% AFUE",stage:"Single Stage",price:5850},
+    md:  {model:"58SB0B070M17--12",  btu:'70K BTU 17.5"',afue:"80% AFUE",stage:"Single Stage",price:6150},
+    lg:  {model:"58SB0B110M21--20",  btu:'110K BTU 21"',afue:"80% AFUE",stage:"Single Stage",price:6850},
+    lg24:{model:"58SB0B135M24--20",  btu:'135K BTU 24"',afue:"80% AFUE",stage:"Single Stage",price:7350},
+    xl:  {model:"58SB0B135M24--20",  btu:'135K BTU 24"',afue:"80% AFUE",stage:"Single Stage",price:6850}
+  },
+  "95":{
+    sm:  {model:"59SC6A060M14--12",   btu:'60K BTU 14"', afue:"95% AFUE",stage:"Single Stage",price:6850},
+    md:  {model:"59SC6A080M17--16",   btu:'80K BTU 17.5"',afue:"95% AFUE",stage:"Single Stage",price:7350},
+    lg:  {model:"59SC6A100M21--20--16",btu:'100K BTU 21"',afue:"95% AFUE",stage:"Single Stage",price:7350},
+    lg24:{model:"59SC6A120M24--22",   btu:'120K BTU 24"',afue:"95% AFUE",stage:"Single Stage",price:7850},
+    xl:  {model:"59SC6A120M24--22",   btu:'120K BTU 24"',afue:"95% AFUE",stage:"Single Stage",price:8350}
+  }
+};
+const FCBT={
+  "80":{
+    sm:  {model:"58TP0B070V17--16--12", btu:'70K BTU 14"', afue:"80% AFUE",stage:"Two Stage",price:6350},
+    md:  {model:"58TP0B090V17--16--12", btu:'90K BTU 17.5"',afue:"80% AFUE",stage:"Two Stage",price:6850},
+    lg:  {model:"58TP0B110V21--22--20", btu:'110K BTU 21"',afue:"80% AFUE",stage:"Two Stage",price:7850},
+    lg24:{model:"58TP0B135V24--22--20", btu:'135K BTU 24"',afue:"80% AFUE",stage:"Two Stage",price:8250},
+    xl:  {model:"58TP0B135V24--22--20", btu:'135K BTU 24"',afue:"80% AFUE",stage:"Two Stage",price:6850}
+  },
+  "96":{
+    sm:  {model:"59TP6C060V14--12",btu:'60K BTU 14"', afue:"96% AFUE",stage:"Two Stage",price:7350},
+    md:  {model:"59TP6C080V17--16",btu:'80K BTU 17.5"',afue:"96% AFUE",stage:"Two Stage",price:7850},
+    lg:  {model:"59TP6C100V21--20",btu:'100K BTU 21"',afue:"96% AFUE",stage:"Two Stage",price:7850},
+    lg24:{model:"59TP6C120V24--22",btu:'120K BTU 24"',afue:"96% AFUE",stage:"Two Stage",price:8250},
+    xl:  {model:"59TP6C120V24--22",btu:'120K BTU 24"',afue:"96% AFUE",stage:"Two Stage",price:8850}
+  }
+};
+
+// ── AC PRICING ────────────────────────────────────────────────────────────────
+const AC={
+  good:{
+    under1200:  {model:"PA4SAAN51800N",tons:"1.5 ton",price:4350},
+    "1200_1500":{model:"PA4SAAN52400N",tons:"2 ton",  price:4550},
+    "1500_1800":{model:"PA4SAAN53000N",tons:"2.5 ton",price:4650},
+    "1800_2200":{model:"PA4SAAN53600N",tons:"3 ton",  price:4850},
+    "2200_2400":{model:"PA4SAAN54200N",tons:"3.5 ton",price:5150},
+    "2400_3500":{model:"PA4SAAN54800N",tons:"4 ton",  price:5350},
+    over3500:   {model:"PA4SAAN56000N",tons:"5 ton",  price:5850}
+  },
+  better:{
+    under1200:  {model:"26SCA418N003",tons:"1.5 ton",price:6000},
+    "1200_1500":{model:"26SCA424N003",tons:"2 ton",  price:6350},
+    "1500_1800":{model:"26SCA430N003",tons:"2.5 ton",price:6450},
+    "1800_2200":{model:"26SCA436N003",tons:"3 ton",  price:6850},
+    "2200_2400":{model:"26SCA442N003",tons:"3.5 ton",price:7250},
+    "2400_3500":{model:"26SCA448N003",tons:"4 ton",  price:7750},
+    over3500:   {model:"26SCA460N003",tons:"5 ton",  price:8300}
+  },
+  best:{
+    under1200:  {model:"26SPA618W003",tons:"1.5 ton",price:6850},
+    "1200_1500":{model:"26SPA624W003",tons:"2 ton",  price:7150},
+    "1500_1800":{model:"26SPA630W003",tons:"2.5 ton",price:7650},
+    "1800_2200":{model:"26SPA636W023",tons:"3 ton",  price:7850},
+    "2200_2400":{model:"26SPA642W003",tons:"3.5 ton",price:8350},
+    "2400_3500":{model:"26SPA648W003",tons:"4 ton",  price:8800},
+    over3500:   {model:"26SPA660W003",tons:"5 ton",  price:9150}
+  }
+};
+
+// ── HEAT PUMP PRICING ─────────────────────────────────────────────────────────
+const HP_KEEP={
+  under1200:  {model:"37MUHAQ18AA3",tons:"1.5 ton",coilA:{model:"45MULAQ24XAX",size:'14"'},coilB:{model:"45MULAQ24XBX",size:'17"'},price:13000,xcelRebate:3380},
+  "1200_1500":{model:"37MUHAQ24AA3",tons:"2 ton",  coilA:{model:"45MULAQ24XAX",size:'14"'},coilB:{model:"45MULAQ24XBX",size:'17"'},price:13000,xcelRebate:3940},
+  "1500_1800":{model:"37MUHAQ30AA3",tons:"2.5 ton",coilA:{model:"45MULAQ36XBX",size:'17"'},coilB:{model:"45MULAQ36XCX",size:'21"'},price:13000,xcelRebate:6000},
+  "1800_2200":{model:"37MUHAQ36AA3",tons:"3 ton",  coilA:{model:"45MULAQ36XBX",size:'17"'},coilB:{model:"45MULAQ36XCX",size:'21"'},price:14500,xcelRebate:6750},
+  "2200_2400":{model:"37MUHAQ36AA3",tons:"3 ton",  coilA:{model:"45MULAQ36XBX",size:'17"'},coilB:{model:"45MULAQ36XCX",size:'21"'},price:14500,xcelRebate:6750},
+  "2400_3500":{model:"37MUHAQ48AA3",tons:"4 ton",  coilA:{model:"45MULAQ60XMX",size:'21"'},coilB:null,                              price:16500,xcelRebate:7880},
+  over3500:   {model:"37MUHAQ60AA3",tons:"5 ton",  coilA:{model:"45MULAQ60XMX",size:'21"'},coilB:{model:"45MULAQ60XDX",size:'24"'},price:18500,xcelRebate:8060}
+};
+const HP_DUAL={
+  under1200:  {model:"37MUHAQ18AA3",tons:"1.5 ton",coilA:{model:"45MULAQ24XAX",size:'14"'},coilB:{model:"45MULAQ24XBX",size:'17"'},price:14500,xcelRebate:3380},
+  "1200_1500":{model:"37MUHAQ24AA3",tons:"2 ton",  coilA:{model:"45MULAQ24XAX",size:'14"'},coilB:{model:"45MULAQ24XBX",size:'17"'},price:14500,xcelRebate:3940},
+  "1500_1800":{model:"37MUHAQ30AA3",tons:"2.5 ton",coilA:{model:"45MULAQ36XBX",size:'17"'},coilB:{model:"45MULAQ36XCX",size:'21"'},price:14500,xcelRebate:6000},
+  "1800_2200":{model:"37MUHAQ36AA3",tons:"3 ton",  coilA:{model:"45MULAQ36XBX",size:'17"'},coilB:{model:"45MULAQ36XCX",size:'21"'},price:16000,xcelRebate:6750},
+  "2200_2400":{model:"37MUHAQ36AA3",tons:"3 ton",  coilA:{model:"45MULAQ36XBX",size:'17"'},coilB:{model:"45MULAQ36XCX",size:'21"'},price:16000,xcelRebate:6750},
+  "2400_3500":{model:"37MUHAQ48AA3",tons:"4 ton",  coilA:{model:"45MULAQ60XMX",size:'21"'},coilB:null,                              price:18000,xcelRebate:7880},
+  over3500:   {model:"37MUHAQ60AA3",tons:"5 ton",  coilA:{model:"45MULAQ60XMX",size:'21"'},coilB:{model:"45MULAQ60XDX",size:'24"'},price:20000,xcelRebate:8060}
+};
+
+// MAT = $1,350 standard materials package
+const MAT = 1350;
+
+// ── HELPER: furnace size key from home size ───────────────────────────────────
+function furnSzKey(homeSz) {
+  const small = ["under1200","1200_1500","1500_1800"];
+  const med   = ["1800_2200"];
+  const lg    = ["2200_2400","2400_3500"];
+  // xl = over3500
+  if (small.includes(homeSz)) return "sm";
+  if (med.includes(homeSz))   return "md";
+  if (lg.includes(homeSz))    return "lg";
+  return "xl";
+}
+
+
+// ── PIN LOGIN ─────────────────────────────────────────────────────────────────
+const CORRECT_PIN = '1001';
+const ADMIN_PWD   = 'Sparks2026';
+const REP_NAME    = 'Mariana';
+let pinEntry = '';
+let sessionReps = [{name:'Mariana',pin:'1001'}];
+
+function pp(d){if(pinEntry.length>=4)return;pinEntry+=d;updDots();if(pinEntry.length===4)chkPin();}
+function pc(){pinEntry='';updDots();document.getElementById('lerr').textContent='';}
+function updDots(){for(let i=0;i<4;i++)document.getElementById('d'+i).classList.toggle('filled',i<pinEntry.length);}
+function chkPin(){
+  if(pinEntry===CORRECT_PIN){
+    document.getElementById('lscr').style.display='none';
+    renderPitch('hoa');renderEdu();updCalc();updQS();
+  }else{
+    document.getElementById('lerr').textContent='Incorrect PIN. Try again.';
+    setTimeout(()=>{pinEntry='';updDots();},800);
+  }
+}
+
+// ── ADMIN ─────────────────────────────────────────────────────────────────────
+function admOpen(){const pwd=prompt('Admin password:');if(pwd!==ADMIN_PWD){alert('Incorrect password.');return;}renderRepList();document.getElementById('adm-ov').classList.add('open');}
+function admClose(){document.getElementById('adm-ov').classList.remove('open');}
+function renderRepList(){document.getElementById('rep-list').innerHTML=sessionReps.map((r,i)=>`<div class="rep-item"><div><div class="ri-name">${r.name}</div><div class="ri-pin">PIN: ${r.pin}</div></div><button class="ri-del" onclick="delRep(${i})">Delete</button></div>`).join('');}
+function delRep(i){if(sessionReps[i].name===REP_NAME){alert('Cannot delete active rep.');return;}if(!confirm(`Delete ${sessionReps[i].name}?`))return;sessionReps.splice(i,1);renderRepList();}
+function admAdd(){const n=document.getElementById('an-name').value.trim(),p=document.getElementById('an-pin').value.trim();if(!n||p.length!==4||isNaN(p)){alert('Enter name and 4-digit PIN.');return;}sessionReps.push({name:n,pin:p});document.getElementById('an-name').value='';document.getElementById('an-pin').value='';renderRepList();alert(`${n} added (session only).`);}
+
+// ── CALC ──────────────────────────────────────────────────────────────────────
+let sysType='keep', sizeKey='1800_2200';
+const fmt = n => '$'+n.toLocaleString();
+function setSys(t,el){sysType=t;document.querySelectorAll('.sys-card').forEach(c=>c.classList.remove('active'));el.classList.add('active');updCalc();}
+function setSz(k,el){sizeKey=k;document.querySelectorAll('.szbtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');updCalc();}
+function updCalc(){
+  const d=sysType==='keep'?HP_KEEP[sizeKey]:HP_DUAL[sizeKey];
+  const fed=Math.min(2000,Math.round(d.price*0.30));
+  const tot=d.xcelRebate+fed;const net=Math.max(0,d.price-tot);
+  document.getElementById('res-title').textContent=(sysType==='keep'?'Keep Furnace':'Dual Fuel')+' — '+d.tons;
+  document.getElementById('res-model').textContent=d.model;
+  document.getElementById('res-price').textContent=fmt(d.price);
+  document.getElementById('res-xcel').textContent='–'+fmt(d.xcelRebate);
+  document.getElementById('res-fed').textContent='–'+fmt(fed);
+  document.getElementById('res-total').textContent='–'+fmt(tot);
+  document.getElementById('res-net').textContent=fmt(net);
+  document.getElementById('res-xpill').textContent='Xcel rebate: '+fmt(d.xcelRebate)+' — Sparks files all paperwork. Model: '+d.model+', '+d.tons+'.';
+}
+
+// ── CATEGORY ─────────────────────────────────────────────────────────────────
+let qCat='hp';
+function setCat(cat,el){
+  qCat=cat;
+  document.querySelectorAll('#cat-tabs .abtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  ['cat-hp','cat-ac','cat-full','cat-furnace'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('cat-'+cat).style.display='block';
+  updQS();
+}
+
+// ── PHOTO PREVIEWS ────────────────────────────────────────────────────────────
+function previewPhoto(input,idx){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const div=document.getElementById('prev-'+idx);
+    div.innerHTML=`<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;border-radius:var(--radius-md);">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
+function getFurnEntry(tier,afue,sz){
+  let dict;
+  if(tier==='payne') dict=FP[afue==='95'?'96':afue];
+  else if(tier==='better') dict=FCB[afue==='80'?'80':'95'];
+  else dict=FCBT[afue==='96'?'96':'80'];
+  const k=furnSzKey(sz);
+  return dict[k]||dict['lg']||Object.values(dict)[0];
+}
+
+// ── QUOTE SUMMARY + HIDDEN FIELD POPULATION ───────────────────────────────────
+function updQS(){
+  updPreviews();
+  const first=document.getElementById('f-first').value.trim();
+  const last=document.getElementById('f-last').value.trim();
+  const addr=document.getElementById('f-addr').value.trim();
+  const lines=[];
+  if(first||last) lines.push('<strong>Client:</strong> '+(first+' '+last).trim());
+  if(addr) lines.push('<strong>Address:</strong> '+addr);
+  lines.push('<strong>Rep:</strong> Mariana');
+
+  // Set category hidden field
+  const catLabels={hp:'Heat Pump',ac:'AC Replacement',full:'Full System',furnace:'Furnace Only'};
+  setHidden('h-category', catLabels[qCat]);
+
+  if(qCat==='hp'){
+    try{
+      const hpType=document.getElementById('hp-type').value;
+      const hpSz=document.getElementById('hp-size').value;
+      const hpCoil=document.getElementById('hp-coil').value;
+      const d=(hpType==='keep'?HP_KEEP:HP_DUAL)[hpSz];
+      const coil=hpCoil==='A'?d.coilA:(d.coilB||d.coilA);
+      const fed=Math.min(2000,Math.round(d.price*0.30));
+      const net=Math.max(0,d.price-d.xcelRebate-fed);
+      const lbl=hpType==='keep'?'Keep Existing Furnace':'Dual Fuel — New Payne';
+      lines.push('<strong>System:</strong> '+lbl+' — '+d.tons);
+      lines.push('<strong>HP:</strong> '+d.model+' | <strong>Coil:</strong> '+coil.model+' ('+coil.size+')');
+      lines.push('<strong>Price:</strong> '+fmt(d.price)+' | <strong>Xcel:</strong> –'+fmt(d.xcelRebate)+' | <strong>IRA:</strong> –'+fmt(fed));
+      lines.push('<strong style="color:var(--green)">Net: '+fmt(net)+'</strong>');
+      setHidden('h-system_type', lbl+' — '+d.tons);
+      setHidden('h-ac_model', d.model);
+      setHidden('h-coil_model', coil.model+' ('+coil.size+')');
+      setHidden('h-system_price', fmt(d.price));
+      setHidden('h-xcel_rebate', fmt(d.xcelRebate));
+      setHidden('h-ira_credit', fmt(fed));
+      setHidden('h-net_cost', fmt(net));
+      setHidden('h-total_price', fmt(d.price));
+    }catch(e){}
+  } else if(qCat==='ac'){
+    try{
+      const sz=document.getElementById('ac-size').value;
+      const tier=document.getElementById('ac-tier').value;
+      const d=AC[tier][sz];
+      const total=d.price+MAT;
+      lines.push('<strong>AC:</strong> '+d.model+' ('+d.tons+') — '+tier+' tier');
+      lines.push('<strong>AC:</strong> '+fmt(d.price)+' + <strong>Mat:</strong> '+fmt(MAT)+' = <strong style="color:var(--red)">'+fmt(total)+'</strong>');
+      setHidden('h-system_type','AC Replacement — '+tier+' tier');
+      setHidden('h-ac_model',d.model+' ('+d.tons+')');
+      setHidden('h-ac_tier',tier);
+      setHidden('h-total_price',fmt(total));
+      setHidden('h-system_price',fmt(total));
+    }catch(e){}
+  } else if(qCat==='full'){
+    try{
+      const sz=document.getElementById('fs-size').value;
+      const tier=document.getElementById('fs-tier').value;
+      const afue=document.getElementById('fs-afue').value;
+      const ftier=document.getElementById('fs-ftier').value;
+      const ac=AC[tier][sz];
+      const fn=getFurnEntry(ftier,afue,sz);
+      const total=ac.price+fn.price+MAT;
+      lines.push('<strong>AC:</strong> '+ac.model+' ('+ac.tons+') | <strong>Furnace:</strong> '+fn.model);
+      lines.push('<strong>'+fn.btu+' '+fn.afue+(fn.stage?' — '+fn.stage:'')+'</strong>');
+      lines.push('<strong>Total: </strong><strong style="color:var(--red)">'+fmt(total)+'</strong>');
+      setHidden('h-system_type','Full System — '+tier+' AC / '+ftier+' Furnace');
+      setHidden('h-ac_model',ac.model+' ('+ac.tons+')');
+      setHidden('h-ac_tier',tier);
+      setHidden('h-furnace_model',fn.model);
+      setHidden('h-furnace_tier',ftier);
+      setHidden('h-furnace_afue',afue+'%');
+      setHidden('h-total_price',fmt(total));
+      setHidden('h-system_price',fmt(total));
+    }catch(e){}
+  } else if(qCat==='furnace'){
+    try{
+      const sz=document.getElementById('fn-size').value;
+      const afue=document.getElementById('fn-afue').value;
+      const tier=document.getElementById('fn-tier').value;
+      const fn=getFurnEntry(tier,afue,sz);
+      const total=fn.price+MAT;
+      lines.push('<strong>Furnace:</strong> '+fn.model+' — '+fn.btu+' '+fn.afue+(fn.stage?' — '+fn.stage:''));
+      lines.push('<strong style="color:var(--red)">Total: '+fmt(total)+'</strong>');
+      setHidden('h-system_type','Furnace Only — '+tier+' / '+afue+'% AFUE');
+      setHidden('h-furnace_model',fn.model);
+      setHidden('h-furnace_tier',tier);
+      setHidden('h-furnace_afue',afue+'%');
+      setHidden('h-total_price',fmt(total));
+      setHidden('h-system_price',fmt(total));
+    }catch(e){}
+  }
+  document.getElementById('qsum').innerHTML=lines.join('<br>');
+}
+
+function setHidden(id,val){const el=document.getElementById(id);if(el)el.value=val||'';}
+
+function updPreviews(){
+  try{
+    const hpType=document.getElementById('hp-type').value;
+    const hpSz=document.getElementById('hp-size').value;
+    const hpCoil=document.getElementById('hp-coil').value;
+    const d=(hpType==='keep'?HP_KEEP:HP_DUAL)[hpSz];
+    const coil=hpCoil==='A'?d.coilA:(d.coilB||d.coilA);
+    const fed=Math.min(2000,Math.round(d.price*0.30));
+    const net=Math.max(0,d.price-d.xcelRebate-fed);
+    document.getElementById('hp-preview').innerHTML=`<strong>HP:</strong> ${d.model} (${d.tons}) &nbsp;|&nbsp; <strong>Coil:</strong> ${coil.model} (${coil.size})<br><strong>Price:</strong> ${fmt(d.price)} &nbsp;|&nbsp; <strong>Xcel:</strong> ${fmt(d.xcelRebate)} &nbsp;|&nbsp; <strong>IRA:</strong> ${fmt(fed)} &nbsp;|&nbsp; <strong style="color:var(--green)">Net: ${fmt(net)}</strong>`;
+  }catch(e){}
+  try{
+    const sz=document.getElementById('ac-size').value,tier=document.getElementById('ac-tier').value;
+    const d=AC[tier][sz],total=d.price+MAT;
+    document.getElementById('ac-preview').innerHTML=`<strong>Model:</strong> ${d.model} (${d.tons}) — ${tier} tier<br><strong>AC:</strong> ${fmt(d.price)} + <strong>Mat:</strong> ${fmt(MAT)} = <strong style="color:var(--red)">${fmt(total)}</strong>`;
+  }catch(e){}
+  try{
+    const sz=document.getElementById('fs-size').value,tier=document.getElementById('fs-tier').value;
+    const afue=document.getElementById('fs-afue').value,ftier=document.getElementById('fs-ftier').value;
+    const ac=AC[tier][sz],fn=getFurnEntry(ftier,afue,sz),total=ac.price+fn.price+MAT;
+    document.getElementById('fs-preview').innerHTML=`<strong>AC:</strong> ${ac.model} (${ac.tons}) &nbsp;|&nbsp; <strong>Furnace:</strong> ${fn.model} ${fn.btu}<br><strong>AC:</strong> ${fmt(ac.price)} + <strong>Furn:</strong> ${fmt(fn.price)} + <strong>Mat:</strong> ${fmt(MAT)} = <strong style="color:var(--red)">${fmt(total)}</strong>`;
+  }catch(e){}
+  try{
+    const sz=document.getElementById('fn-size').value,afue=document.getElementById('fn-afue').value;
+    const tier=document.getElementById('fn-tier').value,fn=getFurnEntry(tier,afue,sz),total=fn.price+MAT;
+    document.getElementById('fn-preview').innerHTML=`<strong>Model:</strong> ${fn.model} &nbsp;|&nbsp; ${fn.btu} ${fn.afue}${fn.stage?' — '+fn.stage:''}<br><strong>Furnace:</strong> ${fmt(fn.price)} + <strong>Mat:</strong> ${fmt(MAT)} = <strong style="color:var(--red)">${fmt(total)}</strong>`;
+  }catch(e){}
+}
+
+// ── FORM SUBMIT ───────────────────────────────────────────────────────────────
+function handleSubmit(e){
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;
+  btn.innerHTML='Submitting...';
+  // Let native form submit happen — Netlify intercepts it
+  // Show success after a short delay (Netlify redirects by default but we preventDefault)
+  // Actually let the form submit naturally for Netlify
+}
+
+function resetForm(){
+  document.getElementById('success-screen').classList.remove('show');
+  document.getElementById('quote-form').reset();
+  updQS();
+  showP('client');
+  document.getElementById('submit-btn').disabled=false;
+  document.getElementById('submit-btn').innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg> Submit Quote to Sparks';
+  for(let i=0;i<3;i++){const d=document.getElementById('prev-'+i);if(d)d.innerHTML=(i+1)+'';}
+}
+
+// ── PITCH & EDU ───────────────────────────────────────────────────────────────
+const pitches={
+  hoa:{quote:'"What if we could upgrade every unit in your building with a Carrier inverter heat pump — and Xcel sends your residents a check for $3,380 to $8,060 about 10 weeks after we finish? Before the federal tax credit. We handle all the paperwork. No commissioned salespeople. Just the math."',
+    sections:[
+      {icon:"📋",cls:"exp-icon-navy",title:"Key Talking Points",sub:"7 points for every board presentation",body:`<ul class="blist"><li>Position Sparks as exclusive preferred HOA vendor — one call, one invoice</li><li>Group discount: 12% off 10+ units, 18% off 25+ — 30-day lock</li><li>Sparks submits all Xcel rebate paperwork — residents just wait for the check</li><li>Xcel rebate: $3,380–$8,060 paid directly ~10 weeks post-install</li><li>Federal IRA 25C: up to $2,000 dollar-for-dollar tax credit</li><li>Carrier 37MUHAQ inverter — connects to existing ductwork, no floor footprint</li><li>30-day group pricing window — urgency without pressure</li></ul>`},
+      {icon:"💰",cls:"exp-icon-red",title:"The Math Comparison",sub:"Real numbers win every time",body:`<table class="ctbl"><thead><tr><th></th><th>Typical Denver HVAC</th><th>Sparks (3-ton HP)</th></tr></thead><tbody><tr><td>System price</td><td class="bad">$18,000–$24,000</td><td class="good">$14,500</td></tr><tr><td>Xcel rebate</td><td class="bad">They keep it</td><td class="good">–$6,750 (to you)</td></tr><tr><td>Federal IRA</td><td class="bad">Not mentioned</td><td class="good">–$2,000</td></tr><tr><td><strong>Net out-of-pocket</strong></td><td class="bad"><strong>$18K–$24K</strong></td><td class="hi">~$5,750</td></tr></tbody></table><div class="sstmt">"The competitor charges $18,000 and pockets the rebate. We charge $14,500, file the paperwork, and your resident gets a <span>$6,750 check</span>."</div>`},
+      {icon:"🛡️",cls:"exp-icon-gold",title:"Handle Objections",sub:"The 3 most common",body:`<div class="oq">"The price seems high."</div><div class="oa">Let's look at the net. Xcel sends them $6,750 direct, plus $2,000 off taxes. Under $6,000 out of pocket with AC included.</div><div class="oq" style="margin-top:10px">"We already have a furnace."</div><div class="oa">Your furnace stays. Heat pump handles 85% of Denver's heating season. Furnace fires as backup on coldest nights only.</div><div class="oq" style="margin-top:10px">"We need to think about it."</div><div class="oa">Group pricing locks for 30 days. After that each unit is on individual pricing. I'll leave a flyer for every resident.</div>`},
+      {icon:"✅",cls:"exp-icon-green",title:"Strong Statements",sub:"Use these word-for-word",body:`<div class="sstmt">"We are the <span>only</span> company in Denver that submits your Xcel rebate paperwork for you."</div><div class="sstmt">"No commissioned salespeople. You call us, we size it, we install it, done."</div><div class="sstmt">"Carrier authorized dealer. <span>Full manufacturer warranty.</span>"</div>`},
+      {icon:"🤝",cls:"exp-icon-red",title:"Closing Statements",sub:"End every presentation strong",body:`<div class="cbox"><strong>Commitment Close:</strong> "Let me leave a one-pager with every unit. If 10+ residents commit in 30 days, everyone gets 12% off. Can I leave the flyer?"</div><div class="cbox"><strong>Math Close:</strong> "$5,750 net. Carrier HP with central air. Xcel check in the mail. Is there a better offer in Denver? Bring it — we'll beat it."</div><div class="cbox"><strong>Urgency Close:</strong> "Xcel's rebate is fully funded right now. When funds run out, it drops. The $6,750 exists today."</div>`}
+    ]},
+  owner:{quote:'"What if we could get you a Carrier inverter heat pump installed — and Xcel sends you a check for $3,380 to $8,060 about 10 weeks after we finish? Before the federal tax credit. We handle all the paperwork. No commissioned salespeople. Just the math."',
+    sections:[
+      {icon:"📋",cls:"exp-icon-navy",title:"Key Talking Points",sub:"7 points for every homeowner conversation",body:`<ul class="blist"><li>Sparks is Denver's only factory-direct, no-commission HVAC company</li><li>Heat pump handles 80–85% of the year — furnace fires below ~35°F only</li><li>Central AC included at no extra cost</li><li>Sparks submits all Xcel rebate paperwork — you just wait for the check</li><li>Xcel rebate: $3,380–$8,060 paid directly ~10 weeks post-install</li><li>Federal IRA 25C: up to $2,000 dollar-for-dollar tax credit</li><li>One-day installation — existing ductwork stays, furnace stays as backup</li></ul>`},
+      {icon:"💰",cls:"exp-icon-red",title:"The Math Comparison",sub:"Real numbers win every time",body:`<table class="ctbl"><thead><tr><th></th><th>Typical Denver HVAC</th><th>Sparks (3-ton HP)</th></tr></thead><tbody><tr><td>System price</td><td class="bad">$18,000–$24,000</td><td class="good">$14,500</td></tr><tr><td>Xcel rebate</td><td class="bad">They keep it</td><td class="good">–$6,750 (to you)</td></tr><tr><td>Federal IRA</td><td class="bad">Not mentioned</td><td class="good">–$2,000</td></tr><tr><td>Commissioned sales</td><td class="bad">Yes</td><td class="good">None</td></tr><tr><td><strong>Net out-of-pocket</strong></td><td class="bad"><strong>$18K–$24K</strong></td><td class="hi">~$5,750</td></tr></tbody></table><div class="sstmt">"The competitor charges $18,000 and pockets the rebate. We charge $14,500, file the paperwork, and you get a <span>$6,750 check in the mail</span>. Before the $2,000 tax credit."</div>`},
+      {icon:"🛡️",cls:"exp-icon-gold",title:"Handle Objections",sub:"The 3 most common",body:`<div class="oq">"The price seems high."</div><div class="oa">Let's look at the net. Xcel sends you $6,750 direct, plus $2,000 off your taxes. Under $6,000 out of pocket for a Carrier system with AC included.</div><div class="oq" style="margin-top:10px">"I already have a furnace."</div><div class="oa">Your furnace stays. The heat pump handles 85% of Denver's heating season. Furnace fires as backup on the coldest nights only. Plus AC at no extra cost.</div><div class="oq" style="margin-top:10px">"I need to think about it."</div><div class="oa">Totally fair. Just know Xcel's rebate funds are active right now — when funding runs out the rebate drops. The $6,750 exists today.</div>`},
+      {icon:"✅",cls:"exp-icon-green",title:"Strong Statements",sub:"Use these word-for-word",body:`<div class="sstmt">"We are the <span>only</span> company in Denver that submits your Xcel rebate paperwork for you. We do it at installation. You get a check."</div><div class="sstmt">"No commissioned salespeople. You call us, we size it, we install it, done."</div><div class="sstmt">"Carrier authorized dealer. <span>Full manufacturer warranty.</span> Same Carrier unit that costs $24,000 at the competitor down the street."</div>`},
+      {icon:"🤝",cls:"exp-icon-red",title:"Closing Statements",sub:"Use one of these to end every conversation",body:`<div class="cbox"><strong>No-Brainer Close:</strong> "Net cost ~$5,750. AC included. Energy bill down $80–$150/mo. Carrier warranty. One-day install. What's holding you back?"</div><div class="cbox"><strong>Math Close:</strong> "$5,750 net. Carrier heat pump with central air. Xcel check in the mail. Is there a better offer in Denver? Bring it to us — we'll beat it."</div><div class="cbox"><strong>Urgency Close:</strong> "Xcel's rebate program is fully funded right now. When funds run out, the rebate drops. The $6,750 I'm talking about exists today."</div>`}
+    ]},
+  landlord:{quote:'"Upgraded units rent $100–200 more per month. Xcel rebate hits your account 10 weeks post-install. Net cost under $6,000 on a 3-ton. You recover that in rent premium in under 3 years."',
+    sections:[
+      {icon:"📋",cls:"exp-icon-navy",title:"Key Talking Points",sub:"For property investors",body:`<ul class="blist"><li>Bonus depreciation: full cost may be deductible year one</li><li>"Heat pump + central AC" commands premium Denver rents</li><li>Tenant pays utilities — you capture the rent premium</li><li>Multi-unit discount: same group pricing for 5+ units</li><li>Xcel rebate goes to property owner — Sparks files paperwork</li></ul>`},
+      {icon:"💰",cls:"exp-icon-red",title:"ROI Math",sub:"Investor numbers",body:`<table class="ctbl"><thead><tr><th>3-ton</th><th></th></tr></thead><tbody><tr><td>Sparks price</td><td>$14,500</td></tr><tr><td>Xcel rebate</td><td class="good">–$6,750</td></tr><tr><td>IRA credit</td><td class="good">–$2,000</td></tr><tr><td><strong>Net</strong></td><td class="good"><strong>$5,750</strong></td></tr><tr><td>Rent premium/mo</td><td class="good">+$100–$200</td></tr><tr><td>Payback</td><td class="good">29–58 months</td></tr></tbody></table>`},
+      {icon:"🤝",cls:"exp-icon-red",title:"Closes",sub:"Portfolio closers",body:`<div class="cbox"><strong>Portfolio Close:</strong> "Let me build a per-unit breakdown — Xcel rebate, net cost, rent premium ROI."</div><div class="cbox"><strong>First-Unit Close:</strong> "Start with one unit. See the Xcel check arrive. Then we talk about the rest."</div>`}
+    ]},
+  new:{quote:'"The Carrier 37MUHAQ connects to your existing system — no furnace room needed. Offer the Xcel rebate of up to $8,060 as a closing tool for your buyers — they keep it."',
+    sections:[
+      {icon:"📋",cls:"exp-icon-navy",title:"Key Talking Points",sub:"For builders and developers",body:`<ul class="blist"><li>Works with existing or new ductwork — connects to existing furnace</li><li>Colorado building code trending all-electric — future-proof the project</li><li>Builder differentiator: "Carrier HP + AC standard, Xcel pays buyer up to $8,060"</li><li>Sparks handles rebate paperwork for every buyer</li></ul>`},
+      {icon:"🤝",cls:"exp-icon-red",title:"Closes",sub:"Builder closers",body:`<div class="cbox"><strong>Exclusivity:</strong> "I'd like to be your exclusive HVAC contractor — one price, coordinated with GC, all rebates handled."</div><div class="cbox"><strong>Sales Tool:</strong> "Let me make a one-pager: 'What your Xcel rebate means for you.' Free closing tool for every showing."</div>`}
+    ]}
+};
+
+const eduBoxes=[
+  {cls:"edu-green",icon:"🌿",icls:"exp-icon-green",title:"Why Heat Pumps Are Better for the Environment",sub:"For sustainability-minded clients",body:`<ul class="blist"><li>Gas furnace burns fuel at 80–96% efficiency — always less than 100%</li><li>A heat pump moves heat from outside air at 300–400% efficiency</li><li>No combustion = no carbon monoxide risk, no flue gas, no pilot light</li><li>Can reduce a home's carbon footprint by 1–3 tons CO₂/year</li></ul><div class="sstmt">"A gas furnace is like driving a car to power a light bulb. A heat pump is like <span>redirecting a river</span> — you're moving heat, not making it."</div>`},
+  {cls:"edu-navy",icon:"⚡",icls:"exp-icon-navy",title:"How an Inverter Heat Pump Works",sub:"Plain-English for homeowners",body:`<ul class="blist"><li><strong>Winter:</strong> extracts heat from outside air (even at 0°F) and pumps it inside</li><li><strong>Summer:</strong> reverses — pulls heat from inside and rejects it outside. That's AC</li><li><strong>"Inverter"</strong> = compressor speed adjusts continuously — no on/off cycling</li><li>Uses existing ductwork — heat pump is primary, furnace is backup below ~35°F</li></ul><div class="sstmt">"Your furnace is like a generator. The heat pump is like <span>being connected to the grid</span> — cheaper, quieter, 85% of the time."</div>`},
+  {cls:"edu-red",icon:"💸",icls:"exp-icon-red",title:"The Full Rebate Stack",sub:"Every dollar explained",body:`<table class="ctbl"><thead><tr><th>Incentive</th><th>Amount</th><th>How it works</th></tr></thead><tbody><tr><td><strong>Xcel Energy Rebate</strong></td><td class="good" style="font-weight:700">$3,380–$8,060</td><td>Check mailed to customer ~10 wks post-install. Sparks files all paperwork.</td></tr><tr><td><strong>Federal IRA 25C</strong></td><td class="good" style="font-weight:700">Up to $2,000</td><td>Dollar-for-dollar tax reduction. Customer claims on tax return.</td></tr></tbody></table><div class="sstmt">"Two checks. One from Xcel. One from the IRS. <span>Neither requires the customer to do anything.</span>"</div>`}
+];
+
+function renderPitch(key){
+  const p=pitches[key];
+  document.getElementById('pquote').textContent=p.quote;
+  document.getElementById('psections').innerHTML=p.sections.map((s,i)=>`<div class="ebox" id="ps-${key}-${i}"><div class="ehdr" onclick="tog('ps-${key}-${i}')"><div class="ehdr-l"><div class="eicon ${s.cls}">${s.icon}</div><div><div class="etitle">${s.title}</div><div class="esub">${s.sub}</div></div></div><div class="echev">▼</div></div><div class="ebody">${s.body}</div></div>`).join('');
+}
+function renderEdu(){
+  document.getElementById('edu-boxes').innerHTML=eduBoxes.map((e,i)=>`<div class="ebox ${e.cls}" id="edu-${i}"><div class="ehdr" onclick="tog('edu-${i}')"><div class="ehdr-l"><div class="eicon ${e.icls}">${e.icon}</div><div><div class="etitle">${e.title}</div><div class="esub">${e.sub}</div></div></div><div class="echev">▼</div></div><div class="ebody">${e.body}</div></div>`).join('');
+}
+function tog(id){document.getElementById(id).classList.toggle('open');}
+function setPitch(key,el){document.querySelectorAll('#pitch-panel .atabs .abtn').forEach(b=>b.classList.remove('active'));el.classList.add('active');renderPitch(key);}
+
+// ── NAV ───────────────────────────────────────────────────────────────────────
+function showP(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id+'-panel').classList.add('active');
+  const map={calc:0,client:1,pitch:2,playbook:3,flyer:4};
+  document.querySelectorAll('.nav-tab')[map[id]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+updCalc();
+updQS();
+</script>
+</body>
+</html>
