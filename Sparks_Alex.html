@@ -872,6 +872,17 @@ const AC={
   }
 };
 
+
+const FULL_SYS = {
+  under1200:  {good:10700, better:13350, best:14650},
+  "1200_1500":{good:10900, better:13550, best:14850},
+  "1500_1800":{good:10650, better:14300, best:15450},
+  "1800_2200":{good:11400, better:15050, best:16050},
+  "2200_2400":{good:11700, better:15450, best:16550},
+  "2400_3500":{good:11900, better:15950, best:17000},
+  over3500:   {good:12400, better:16500, best:17350}
+};
+
 // ── HEAT PUMP PRICING ─────────────────────────────────────────────────────────
 const HP_KEEP={
   under1200:  {model:"37MUHAQ18AA3",tons:"1.5 ton",coilA:{model:"45MULAQ24XAX",size:'14"'},coilB:{model:"45MULAQ24XBX",size:'17"'},price:13000,xcelRebate:3380},
@@ -1037,18 +1048,10 @@ function updQS(){
       const ftier=document.getElementById('fs-ftier').value;
       const ac=AC[tier][sz];
       const fn=getFurnEntry(ftier,afue,sz);
-      const total=ac.price+fn.price+MAT;
+      const total=FULL_SYS[sz][tier];
       lines.push('<strong>AC:</strong> '+ac.model+' ('+ac.tons+') | <strong>Furnace:</strong> '+fn.model);
       lines.push('<strong>'+fn.btu+' '+fn.afue+(fn.stage?' — '+fn.stage:'')+'</strong>');
-      lines.push('<strong>Total: </strong><strong style="color:var(--red)">'+fmt(total)+'</strong>');
-      setHidden('h-system_type','Full System — '+tier+' AC / '+ftier+' Furnace');
-      setHidden('h-ac_model',ac.model+' ('+ac.tons+')');
-      setHidden('h-ac_tier',tier);
-      setHidden('h-furnace_model',fn.model);
-      setHidden('h-furnace_tier',ftier);
-      setHidden('h-furnace_afue',afue+'%');
-      setHidden('h-total_price',fmt(total));
-      setHidden('h-system_price',fmt(total));
+      lines.push('<strong style="color:var(--red)">Total Installed: '+fmt(total)+'</strong> (incl. materials)');
     }catch(e){}
   } else if(qCat==='furnace'){
     try{
@@ -1091,8 +1094,9 @@ function updPreviews(){
   try{
     const sz=document.getElementById('fs-size').value,tier=document.getElementById('fs-tier').value;
     const afue=document.getElementById('fs-afue').value,ftier=document.getElementById('fs-ftier').value;
-    const ac=AC[tier][sz],fn=getFurnEntry(ftier,afue,sz),total=ac.price+fn.price+MAT;
-    document.getElementById('fs-preview').innerHTML=`<strong>AC:</strong> ${ac.model} (${ac.tons}) &nbsp;|&nbsp; <strong>Furnace:</strong> ${fn.model} ${fn.btu}<br><strong>AC:</strong> ${fmt(ac.price)} + <strong>Furn:</strong> ${fmt(fn.price)} + <strong>Mat:</strong> ${fmt(MAT)} = <strong style="color:var(--red)">${fmt(total)}</strong>`;
+    const ac=AC[tier][sz],fn=getFurnEntry(ftier,afue,sz);
+    const total=FULL_SYS[sz][tier];
+    document.getElementById('fs-preview').innerHTML=`<strong>AC:</strong> ${ac.model} (${ac.tons}) &nbsp;|&nbsp; <strong>Furnace:</strong> ${fn.model} ${fn.btu}<br><strong>Total Installed Price: <span style="color:var(--red)">${fmt(total)}</span></strong> (includes materials)`;
   }catch(e){}
   try{
     const sz=document.getElementById('fn-size').value,afue=document.getElementById('fn-afue').value;
@@ -1187,9 +1191,10 @@ function buildQuoteInfo(){
       const ftier = document.getElementById('fs-ftier').value;
       const ac = AC[tier][sz];
       const fn = getFurnEntry(ftier,afue,sz);
+      const total = FULL_SYS[sz][tier];
       lines.push('AC Model: ' + ac.model + ' (' + ac.tons + ')');
       lines.push('Furnace: ' + fn.model + ' ' + fn.btu + ' ' + fn.afue);
-      lines.push('Total: ' + fmt(ac.price + fn.price + MAT));
+      lines.push('Total Installed: ' + fmt(total) + ' (includes materials)');
     } else if(qCat==='furnace'){
       const sz   = document.getElementById('fn-size').value;
       const afue = document.getElementById('fn-afue').value;
